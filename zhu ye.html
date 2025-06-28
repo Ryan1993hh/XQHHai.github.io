@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>向&涵的幸福花园</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* 导航栏样式 */
+        .navbar {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff9a9e;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #ff9a9e;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* 轮播图样式 */
+        .carousel {
+            margin-top: 80px;
+            position: relative;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .carousel-container {
+            display: flex;
+            transition: transform 0.5s ease;
+            height: 100%;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7);
+            transition: transform 0.5s ease;
+        }
+
+        /* 为第六张图片添加特殊样式 */
+        .carousel-slide:nth-child(6) img {
+            object-position: center 30%; /* 调整图片位置，让人物居中 */
+            transform: scale(1.1); /* 稍微放大图片以填充空间 */
+        }
+
+        /* 添加悬停效果 */
+        .carousel-slide:hover img {
+            transform: scale(1.05);
+            filter: brightness(0.8);
+        }
+
+        /* 确保内容区域始终可见 */
+        .slide-content {
+            position: absolute;
+            bottom: 50px;
+            left: 50px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            z-index: 2;
+        }
+
+        /* 添加渐变遮罩 */
+        .carousel-slide::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
+            z-index: 1;
+        }
+
+        .slide-title {
+            font-size: 36px;
+            margin-bottom: 10px;
+            opacity: 1;
+            transform: none;
+        }
+
+        .slide-description {
+            font-size: 18px;
+            opacity: 1;
+            transform: none;
+        }
+
+        .carousel-nav {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
+
+        /* 内容区域样式 */
+        .content-section {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 100%);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transform: translateY(0);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 154, 158, 0.1) 0%, rgba(250, 208, 196, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-card:active {
+            transform: translateY(-5px) scale(0.98);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            color: #ff9a9e;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.2) rotate(5deg);
+            color: #ff6b6b;
+        }
+
+        .feature-title {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-title {
+            color: #ff6b6b;
+            transform: translateY(-3px);
+        }
+
+        .feature-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+            opacity: 0.8;
+        }
+
+        .feature-card:hover .feature-description {
+            opacity: 1;
+            transform: translateY(-2px);
+        }
+
+        /* 添加点击波纹效果 */
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 154, 158, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+            z-index: 1;
+        }
+
+        .feature-card:active::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* 修改动画效果 */
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px) scale(0.95);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .animate {
+            animation: fadeIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="zhu ye.html" class="logo">向&涵的幸福花园</a>
+            <div class="nav-links">
+                <a href="ai qing yin ji.html" class="nav-link">爱情印记</a>
+                <a href="xing fu shun jian.html" class="nav-link">幸福瞬间</a>
+                <a href="mei hao shi guang.html" class="nav-link">美好时光</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 轮播图 -->
+    <div class="carousel">
+        <div class="carousel-container">
+            <!-- 轮播图1：我们的故事 -->
+            <div class="carousel-slide">
+                <img src="zhu ye/images/image1.jpg" alt="我们的故事">
+                <div class="slide-content">
+                    <h2 class="slide-title">我们的故事</h2>
+                    <p class="slide-description">从相遇的那一刻起，我们的故事就开始了</p>
+                </div>
+            </div>
+            <!-- 轮播图2：幸福时光 -->
+            <div class="carousel-slide">
+                <img src="zhu ye/images/image2.jpg" alt="幸福时光">
+                <div class="slide-content">
+                    <h2 class="slide-title">幸福时光</h2>
+                    <p class="slide-description">一起走过的每一天都是最美好的回忆</p>
+                </div>
+            </div>
+            <!-- 轮播图3：未来可期 -->
+            <div class="carousel-slide">
+                <img src="zhu ye/images/image3.jpg" alt="未来可期">
+                <div class="slide-content">
+                    <h2 class="slide-title">未来可期</h2>
+                    <p class="slide-description">期待与你一起创造更多美好的回忆</p>
+                </div>
+            </div>
+            <!-- 轮播图4：甜蜜时刻 -->
+            <div class="carousel-slide">
+                <img src="zhu ye/images/image4.jpg" alt="甜蜜时刻">
+                <div class="slide-content">
+                    <h2 class="slide-title">甜蜜时刻</h2>
+                    <p class="slide-description">每一个瞬间都值得珍藏</p>
+                </div>
+            </div>
+            <!-- 轮播图5：相伴一生 -->
+            <div class="carousel-slide">
+                <img src="zhu ye/images/image5.jpg" alt="相伴一生">
+                <div class="slide-content">
+                    <h2 class="slide-title">相伴一生</h2>
+                    <p class="slide-description">愿与你携手走过每一个春夏秋冬</p>
+                </div>
+            </div>
+            <!-- 轮播图6：美好未来 -->
+            <div class="carousel-slide">
+                <img src="zhu ye/images/image6.jpg" alt="美好未来">
+                <div class="slide-content">
+                    <h2 class="slide-title">美好未来</h2>
+                    <p class="slide-description">一起规划属于我们的未来</p>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-nav">
+            <div class="nav-dot active"></div>
+            <div class="nav-dot"></div>
+            <div class="nav-dot"></div>
+            <div class="nav-dot"></div>
+            <div class="nav-dot"></div>
+            <div class="nav-dot"></div>
+        </div>
+    </div>
+
+    <!-- 内容区域 -->
+    <div class="content-section">
+        <h2 class="section-title">我们的幸福花园</h2>
+        <div class="feature-grid">
+            <div class="feature-card animate" onclick="window.location.href='ai qing yin ji.html'">
+                <div class="feature-icon">❤️</div>
+                <h3 class="feature-title">爱情印记</h3>
+                <p class="feature-description">记录我们爱情路上的每一个重要时刻，让回忆永远珍藏</p>
+            </div>
+            <div class="feature-card animate" onclick="window.location.href='xing fu shun jian.html'">
+                <div class="feature-icon">📸</div>
+                <h3 class="feature-title">幸福瞬间</h3>
+                <p class="feature-description">珍藏我们的照片和视频，让美好时光永远定格</p>
+            </div>
+            <div class="feature-card animate" onclick="window.location.href='mei hao shi guang.html'">
+                <div class="feature-icon">📝</div>
+                <h3 class="feature-title">美好时光</h3>
+                <p class="feature-description">记录生活中的点点滴滴，让每个瞬间都值得回味</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 轮播图功能
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.nav-dot');
+        const container = document.querySelector('.carousel-container');
+
+        // 随机文字内容
+        const randomTitles = [
+            "我们的故事",
+            "幸福时光",
+            "未来可期",
+            "甜蜜时刻",
+            "相伴一生",
+            "美好未来",
+            "爱的印记",
+            "幸福花园",
+            "浪漫时光",
+            "永恒誓言"
+        ];
+
+        const randomDescriptions = [
+            "从相遇的那一刻起，我们的故事就开始了",
+            "一起走过的每一天都是最美好的回忆",
+            "期待与你一起创造更多美好的回忆",
+            "每一个瞬间都值得珍藏",
+            "愿与你携手走过每一个春夏秋冬",
+            "一起规划属于我们的未来",
+            "你是我生命中最美的意外",
+            "有你的每一天都是情人节",
+            "愿时光不老，我们不散",
+            "你是我最想留住的幸运"
+        ];
+
+        function updateCarousel() {
+            container.style.transform = `translateX(-${currentSlide * 100}%)`;
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentSlide);
+            });
+            
+            // 更新当前幻灯片的文字内容
+            const currentContent = slides[currentSlide].querySelector('.slide-content');
+            const randomTitle = randomTitles[Math.floor(Math.random() * randomTitles.length)];
+            const randomDescription = randomDescriptions[Math.floor(Math.random() * randomDescriptions.length)];
+            
+            currentContent.querySelector('.slide-title').textContent = randomTitle;
+            currentContent.querySelector('.slide-description').textContent = randomDescription;
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            updateCarousel();
+        }
+
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentSlide = index;
+                updateCarousel();
+            });
+        });
+
+        setInterval(nextSlide, 5000);
+
+        // 初始化轮播图
+        updateCarousel();
+
+        // 滚动动画
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                    // 添加延迟动画
+                    const delay = Array.from(entry.target.parentElement.children).indexOf(entry.target) * 100;
+                    entry.target.style.animationDelay = `${delay}ms`;
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        document.querySelectorAll('.feature-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // 导航栏滚动效果
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.9)';
+            }
+        });
+
+        // 修改 JavaScript 部分，添加卡片点击效果
+        document.querySelectorAll('.feature-card').forEach(card => {
+            // 添加点击效果
+            card.addEventListener('click', function(e) {
+                // 创建波纹效果
+                const ripple = document.createElement('div');
+                ripple.className = 'ripple';
+                this.appendChild(ripple);
+                
+                // 设置波纹位置
+                const rect = this.getBoundingClientRect();
+                ripple.style.left = (e.clientX - rect.left) + 'px';
+                ripple.style.top = (e.clientY - rect.top) + 'px';
+                
+                // 移除波纹
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+                
+                // 延迟跳转，让动画完成
+                setTimeout(() => {
+                    window.location.href = this.getAttribute('onclick').match(/'([^']+)'/)[1];
+                }, 300);
+            });
+            
+            // 添加键盘交互
+            card.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+            
+            // 添加焦点效果
+            card.addEventListener('focus', function() {
+                this.style.transform = 'translateY(-5px) scale(1.02)';
+            });
+            
+            card.addEventListener('blur', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html> 

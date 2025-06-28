@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>爱情印记 - 向&涵的幸福花园</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 背景动画效果 */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ff9a9e;
+            transform: rotate(45deg);
+            animation: float 15s infinite;
+            opacity: 0.3;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ff9a9e;
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            left: -10px;
+        }
+
+        .heart::after {
+            top: -10px;
+        }
+
+        @keyframes float {
+            0% {
+                transform: rotate(45deg) translateY(0) translateX(0);
+                opacity: 0.3;
+            }
+            25% {
+                transform: rotate(45deg) translateY(-50px) translateX(50px);
+                opacity: 0.5;
+            }
+            50% {
+                transform: rotate(45deg) translateY(-100px) translateX(0);
+                opacity: 0.3;
+            }
+            75% {
+                transform: rotate(45deg) translateY(-50px) translateX(-50px);
+                opacity: 0.5;
+            }
+            100% {
+                transform: rotate(45deg) translateY(0) translateX(0);
+                opacity: 0.3;
+            }
+        }
+
+        /* 侧边甜蜜话语 */
+        .sweet-messages {
+            position: fixed;
+            top: 0;
+            width: 200px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            padding: 20px;
+            z-index: 1;
+        }
+
+        .sweet-messages.left {
+            left: 0;
+            align-items: flex-start;
+        }
+
+        .sweet-messages.right {
+            right: 0;
+            align-items: flex-end;
+        }
+
+        .message {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 180px;
+            text-align: center;
+            font-size: 14px;
+            color: #ff9a9e;
+            animation: float-message 8s infinite;
+            backdrop-filter: blur(5px);
+            transform-origin: center;
+        }
+
+        @keyframes float-message {
+            0% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-20px) scale(1.05);
+            }
+            100% {
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* 导航栏样式 */
+        .navbar {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff9a9e;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        /* 时间线样式 */
+        .timeline {
+            max-width: 1200px;
+            margin: 100px auto;
+            padding: 20px;
+            position: relative;
+            min-height: 100vh;
+            margin-left: 220px;
+            margin-right: 220px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .timeline::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, #ff9a9e, #fad0c4);
+            z-index: -1;
+        }
+
+        .timeline-item {
+            margin: 30px 0;
+            position: relative;
+            width: 100%;
+            opacity: 0.5;
+            transform: translateY(20px) scale(0.8);
+            transition: all 0.5s ease;
+            height: auto;
+            min-height: 200px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+        }
+
+        .timeline-item.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .timeline-item.focused {
+            opacity: 1;
+            transform: scale(1.1);
+            z-index: 1;
+        }
+
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            position: relative;
+            width: 100%;
+            height: 40px;
+        }
+
+        .timeline-node {
+            width: 40px;
+            height: 40px;
+            background: #ff9a9e;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(255, 154, 158, 0.3);
+            transition: all 0.3s ease;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+
+        .timeline-date {
+            font-size: 16px;
+            color: #ff9a9e;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 15px;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            white-space: nowrap;
+            z-index: 2;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-date {
+            right: 52%;
+        }
+
+        .timeline-item:nth-child(even) .timeline-date {
+            left: 52%;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            left: 50%;
+            transform: translateX(20px);
+            background: rgba(255, 255, 255, 0.95);
+            border-left: 4px solid #ff9a9e;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            right: 50%;
+            transform: translateX(-20px);
+            background: rgba(255, 255, 255, 0.95);
+            border-right: 4px solid #ff9a9e;
+        }
+
+        .timeline-content {
+            width: 40%;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            transform-origin: center;
+            margin: 0;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255, 154, 158, 0.2);
+            overflow: hidden;
+        }
+
+        .timeline-media {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: all 0.5s ease;
+            z-index: 0;
+            transform: scale(1.2);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .timeline-media img,
+        .timeline-media video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+            pointer-events: none;
+            border-radius: 20px;
+        }
+
+        .timeline-content:hover::before {
+            opacity: 1;
+        }
+
+        .timeline-content:hover .timeline-media {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .timeline-title,
+        .timeline-description,
+        .timeline-date {
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover .timeline-title,
+        .timeline-content:hover .timeline-description,
+        .timeline-content:hover .timeline-date {
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .timeline-preview {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 3;
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+        }
+
+        .timeline-content:hover .timeline-preview {
+            opacity: 1;
+        }
+
+        .edit-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 36px;
+            height: 36px;
+            background: #ff9a9e;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 4;
+            box-shadow: 0 2px 8px rgba(255, 154, 158, 0.3);
+        }
+
+        .timeline-content:hover .edit-button {
+            opacity: 1;
+        }
+
+        .edit-button:hover {
+            transform: scale(1.1);
+            background: #ff7a7e;
+            box-shadow: 0 4px 12px rgba(255, 154, 158, 0.4);
+        }
+
+        .timeline-title {
+            font-size: 20px;
+            color: #ff6b6b;
+            margin-bottom: 12px;
+            font-weight: 600;
+            line-height: 1.3;
+            font-family: 'Arial', sans-serif;
+            position: relative;
+            padding-bottom: 8px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(to right, #ff9a9e, #ff6b6b);
+            border-radius: 3px;
+        }
+
+        .timeline-description {
+            color: #444;
+            line-height: 1.5;
+            font-size: 14px;
+            margin-bottom: 15px;
+            font-family: 'Arial', sans-serif;
+            flex-grow: 1;
+        }
+
+        .timeline-media-carousel {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 2;
+        }
+
+        .carousel-dot {
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
+
+        .timeline-tags {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .timeline-tag {
+            background: linear-gradient(135deg, rgba(255, 154, 158, 0.1) 0%, rgba(255, 107, 107, 0.1) 100%);
+            color: #ff6b6b;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid rgba(255, 107, 107, 0.2);
+        }
+
+        /* 添加按钮样式 */
+        .add-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: #ff9a9e;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 154, 158, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+
+        .add-button:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 6px 20px rgba(255, 154, 158, 0.4);
+        }
+
+        /* 编辑按钮样式 */
+        .edit-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            background: #ff9a9e;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 4;
+        }
+
+        .timeline-content:hover .edit-button {
+            opacity: 1;
+        }
+
+        .edit-button:hover {
+            transform: scale(1.1);
+            background: #ff7a7e;
+        }
+
+        /* 编辑表单样式 */
+        .edit-form {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            display: none;
+            z-index: 1002;
+        }
+
+        .edit-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #ff9a9e;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .form-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-button {
+            background: #ff9a9e;
+            color: white;
+        }
+
+        .cancel-button {
+            background: #e1e1e1;
+            color: #333;
+        }
+
+        .form-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 遮罩层 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: none;
+            z-index: 1001;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* 添加表单样式 */
+        .add-form {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            display: none;
+            z-index: 1002;
+        }
+
+        .add-form.active {
+            display: block;
+        }
+
+        /* 弹窗样式 */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: none;
+            z-index: 1003;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .popup-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .popup-card {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: white;
+            width: 90%;
+            max-width: 900px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1004;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            max-height: 90vh;
+        }
+
+        .popup-card.active {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .popup-media-section {
+            position: relative;
+            background: #f8f8f8;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .popup-media-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+            max-height: 100%;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .popup-media-item {
+            aspect-ratio: 1;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .popup-media-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .popup-media-item img,
+        .popup-media-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .popup-content-section {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .popup-header {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .popup-date {
+            font-size: 14px;
+            color: #ff9a9e;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .popup-date::before {
+            content: '📅';
+            font-size: 16px;
+        }
+
+        .popup-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .popup-description {
+            color: #666;
+            line-height: 1.8;
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+        }
+
+        .popup-close:hover {
+            transform: rotate(90deg);
+            background: #ff9a9e;
+            color: white;
+        }
+
+        .popup-footer {
+            margin-top: auto;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .popup-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .popup-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .popup-button.edit {
+            background: #ff9a9e;
+            color: white;
+        }
+
+        .popup-button.delete {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .popup-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .popup-hearts {
+            display: flex;
+            gap: 8px;
+        }
+
+        .popup-heart {
+            width: 24px;
+            height: 24px;
+            background: #ff9a9e;
+            transform: rotate(45deg);
+            position: relative;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        .popup-heart::before,
+        .popup-heart::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: #ff9a9e;
+            border-radius: 50%;
+        }
+
+        .popup-heart::before {
+            left: -12px;
+        }
+
+        .popup-heart::after {
+            top: -12px;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: rotate(45deg) scale(1); }
+            14% { transform: rotate(45deg) scale(1.3); }
+            28% { transform: rotate(45deg) scale(1); }
+            42% { transform: rotate(45deg) scale(1.3); }
+            70% { transform: rotate(45deg) scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .popup-card {
+                grid-template-columns: 1fr;
+                max-height: 90vh;
+            }
+
+            .popup-media-section {
+                min-height: 300px;
+            }
+        }
+
+        /* 修改音乐播放器样式为隐藏 */
+        .music-player {
+            display: none;
+        }
+
+        /* 添加音乐图标样式 */
+        .music-icon {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ff9a9e;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .music-icon:hover {
+            transform: scale(1.1);
+            background: #ff9a9e;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- 添加音乐图标 -->
+    <div class="music-icon" id="musicIcon">♪</div>
+
+    <!-- 背景音乐 -->
+    <audio id="backgroundMusic" loop autoplay muted playsinline>
+        <source src="yin ji/music/music1.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- 背景动画 -->
+    <div class="background-animation" id="backgroundAnimation"></div>
+
+    <!-- 左侧甜蜜话语 -->
+    <div class="sweet-messages left" id="leftMessages"></div>
+
+    <!-- 右侧甜蜜话语 -->
+    <div class="sweet-messages right" id="rightMessages"></div>
+
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="zhu ye.html" class="logo">向&涵的幸福花园</a>
+            <div class="nav-links">
+                <a href="ai qing yin ji.html" class="nav-link">爱情印记</a>
+                <a href="xing fu shun jian.html" class="nav-link">幸福瞬间</a>
+                <a href="mei hao shi guang.html" class="nav-link">美好时光</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 时间线 -->
+    <div class="timeline">
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <div class="edit-button" onclick="showEditForm(this)">✏️</div>
+                <div class="timeline-preview">
+                    <div class="preview-title">我们的第一次相遇</div>
+                    <div class="preview-date">2023-01-01</div>
+                    <div class="preview-description">在那个阳光明媚的下午，我们在咖啡厅相遇，那一刻仿佛时间都静止了。</div>
+                </div>
+                <div class="timeline-date">2023-01-01</div>
+                <h3 class="timeline-title">我们的第一次相遇</h3>
+                <p class="timeline-description">在那个阳光明媚的下午，我们在咖啡厅相遇，那一刻仿佛时间都静止了。</p>
+                <div class="timeline-media">
+                    <div class="timeline-media-overlay"></div>
+                    <img src="https://source.unsplash.com/random/300x200/?coffee" alt="相遇">
+                </div>
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <div class="edit-button" onclick="showEditForm(this)">✏️</div>
+                <div class="timeline-preview">
+                    <div class="preview-title">第一个情人节</div>
+                    <div class="preview-date">2023-02-14</div>
+                    <div class="preview-description">我们一起度过了第一个情人节，在星空下许下了美好的愿望。</div>
+                </div>
+                <div class="timeline-date">2023-02-14</div>
+                <h3 class="timeline-title">第一个情人节</h3>
+                <p class="timeline-description">我们一起度过了第一个情人节，在星空下许下了美好的愿望。</p>
+                <div class="timeline-media">
+                    <div class="timeline-media-overlay"></div>
+                    <img src="https://source.unsplash.com/random/300x200/?valentine" alt="情人节">
+                </div>
+            </div>
+        </div>
+        <!-- 更多时间线项目可以在这里添加 -->
+    </div>
+
+    <!-- 添加按钮 -->
+    <div class="add-button" onclick="showAddForm()">+</div>
+
+    <!-- 编辑表单 -->
+    <div class="overlay" id="editOverlay"></div>
+    <div class="edit-form" id="editForm">
+        <h2>编辑回忆</h2>
+        <form id="editTimelineForm">
+            <div class="form-group">
+                <label for="editDate">日期</label>
+                <input type="date" id="editDate" required>
+            </div>
+            <div class="form-group">
+                <label for="editTitle">标题</label>
+                <input type="text" id="editTitle" required>
+            </div>
+            <div class="form-group">
+                <label for="editDescription">描述</label>
+                <textarea id="editDescription" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="editMedia">照片/视频</label>
+                <input type="file" id="editMedia" accept="image/*,video/*" multiple>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="form-button cancel-button" onclick="hideEditForm()">取消</button>
+                <button type="submit" class="form-button submit-button">保存</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 添加表单 -->
+    <div class="overlay" id="addOverlay"></div>
+    <div class="add-form" id="addForm">
+        <h2>添加新的回忆</h2>
+        <form id="timelineForm">
+            <div class="form-group">
+                <label for="date">日期</label>
+                <input type="date" id="date" required>
+            </div>
+            <div class="form-group">
+                <label for="title">标题</label>
+                <input type="text" id="title" required>
+            </div>
+            <div class="form-group">
+                <label for="description">描述</label>
+                <textarea id="description" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="media">照片/视频</label>
+                <input type="file" id="media" accept="image/*,video/*" multiple>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="form-button cancel-button" onclick="hideAddForm()">取消</button>
+                <button type="submit" class="form-button submit-button">添加</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 弹窗 -->
+    <div class="popup-overlay" id="popupOverlay"></div>
+    <div class="popup-card" id="popupCard">
+        <div class="popup-media-section">
+            <div class="popup-media-grid" id="popupMediaGrid"></div>
+        </div>
+        <div class="popup-content-section">
+            <div class="popup-close" onclick="hidePopup()">×</div>
+            <div class="popup-header">
+                <div class="popup-date"></div>
+                <h2 class="popup-title"></h2>
+            </div>
+            <p class="popup-description"></p>
+            <div class="popup-footer">
+                <div class="popup-actions">
+                    <button class="popup-button edit" onclick="editCurrentEvent()">
+                        <span>✏️</span> 编辑
+                    </button>
+                    <button class="popup-button delete" onclick="deleteCurrentEvent()">
+                        <span>🗑️</span> 删除
+                    </button>
+                </div>
+                <div class="popup-hearts">
+                    <div class="popup-heart"></div>
+                    <div class="popup-heart" style="animation-delay: 0.2s"></div>
+                    <div class="popup-heart" style="animation-delay: 0.4s"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 甜蜜话语列表
+        const sweetMessages = [
+            "你是我生命中最美的意外",
+            "愿与你共度余生",
+            "你的笑容是我最大的幸福",
+            "爱你是我做过最好的事",
+            "有你的每一天都是情人节",
+            "你是我最想留住的幸运",
+            "愿时光不老，我们不散",
+            "你是我最想拥抱的人",
+            "有你的地方就是家",
+            "你是我最珍贵的礼物",
+            "愿与你携手到白头",
+            "你是我最想守护的人",
+            "有你的每一天都很甜",
+            "你是我最想分享的人",
+            "愿与你共度每一个日出日落",
+            "你的温柔是我最大的依靠",
+            "有你的世界才完整",
+            "你是我最想珍惜的人",
+            "愿与你共度每一个春夏秋冬",
+            "你是我最想陪伴的人",
+            "有你的每一天都很温暖",
+            "你是我最想守护的梦",
+            "愿与你共度每一个平凡的日子",
+            "你是我最想分享快乐的人",
+            "有你的未来才值得期待"
+        ];
+
+        // 创建背景动画
+        function createBackgroundAnimation() {
+            const animationContainer = document.getElementById('backgroundAnimation');
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.top = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 15 + 's';
+                heart.style.transform = `rotate(45deg) scale(${Math.random() * 0.5 + 0.5})`;
+                animationContainer.appendChild(heart);
+            }
+        }
+
+        // 更新侧边栏消息
+        function updateSidebarMessages() {
+            const leftMessages = document.getElementById('leftMessages');
+            const rightMessages = document.getElementById('rightMessages');
+            
+            // 清空现有消息
+            leftMessages.innerHTML = '';
+            rightMessages.innerHTML = '';
+            
+            // 随机选择消息
+            const shuffledMessages = [...sweetMessages].sort(() => Math.random() - 0.5);
+            
+            // 为左右两侧各创建5条消息
+            for (let i = 0; i < 5; i++) {
+                const leftMessage = document.createElement('div');
+                leftMessage.className = 'message';
+                leftMessage.textContent = shuffledMessages[i];
+                leftMessage.style.animationDelay = i * 1.5 + 's';
+                leftMessages.appendChild(leftMessage);
+
+                const rightMessage = document.createElement('div');
+                rightMessage.className = 'message';
+                rightMessage.textContent = shuffledMessages[i + 5];
+                rightMessage.style.animationDelay = i * 1.5 + 's';
+                rightMessages.appendChild(rightMessage);
+            }
+        }
+
+        // 页面加载时初始化动画和消息
+        document.addEventListener('DOMContentLoaded', () => {
+            createBackgroundAnimation();
+            updateSidebarMessages();
+            loadTimelineData();
+            initializeMusic(); // 初始化音乐
+            
+            // 每30秒更新一次侧边栏消息
+            setInterval(updateSidebarMessages, 30000);
+        });
+
+        // 音乐控制
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const musicIcon = document.getElementById('musicIcon');
+        let isFading = false;
+        const FADE_DURATION = 1000;
+        const FADE_INTERVAL = 50;
+
+        // 在页面加载时立即执行音乐播放
+        window.onload = function() {
+            const audio = document.getElementById('backgroundMusic');
+            
+            // 尝试立即播放
+            const playAudio = () => {
+                audio.muted = true;
+                audio.play().then(() => {
+                    audio.muted = false;
+                    audio.volume = 0.8;
+                }).catch(error => {
+                    console.log('自动播放失败，等待用户交互:', error);
+                    // 添加多个事件监听器
+                    const playOnInteraction = () => {
+                        audio.muted = true;
+                        audio.play().then(() => {
+                            audio.muted = false;
+                            audio.volume = 0.8;
+                        });
+                        // 移除所有事件监听器
+                        document.removeEventListener('click', playOnInteraction);
+                        document.removeEventListener('keydown', playOnInteraction);
+                        document.removeEventListener('touchstart', playOnInteraction);
+                        document.removeEventListener('mousemove', playOnInteraction);
+                    };
+                    
+                    document.addEventListener('click', playOnInteraction);
+                    document.addEventListener('keydown', playOnInteraction);
+                    document.addEventListener('touchstart', playOnInteraction);
+                    document.addEventListener('mousemove', playOnInteraction);
+                });
+            };
+
+            // 立即尝试播放
+            playAudio();
+
+            // 页面可见性变化时重新播放
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    playAudio();
+                }
+            });
+
+            // 页面获得焦点时重新播放
+            window.addEventListener('focus', () => {
+                playAudio();
+            });
+        };
+
+        // 修改音乐图标点击事件
+        musicIcon.addEventListener('click', () => {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play().then(() => {
+                    fadeIn();
+                    musicIcon.textContent = '♪';
+                }).catch(error => {
+                    console.log('播放失败:', error);
+                });
+            } else {
+                fadeOut();
+                musicIcon.textContent = '♫';
+            }
+        });
+
+        // 优化淡入效果
+        function fadeIn() {
+            if (isFading) return;
+            isFading = true;
+            
+            backgroundMusic.volume = 0;
+            backgroundMusic.muted = false;
+            
+            const fadeInInterval = setInterval(() => {
+                if (backgroundMusic.volume < 0.8) { // 降低最大音量以保护听力
+                    backgroundMusic.volume = Math.min(0.8, backgroundMusic.volume + 0.1);
+                } else {
+                    clearInterval(fadeInInterval);
+                    isFading = false;
+                }
+            }, FADE_INTERVAL);
+        }
+
+        // 优化淡出效果
+        function fadeOut() {
+            if (isFading) return;
+            isFading = true;
+            
+            const fadeOutInterval = setInterval(() => {
+                if (backgroundMusic.volume > 0) {
+                    backgroundMusic.volume = Math.max(0, backgroundMusic.volume - 0.1);
+                } else {
+                    backgroundMusic.pause();
+                    clearInterval(fadeOutInterval);
+                    isFading = false;
+                }
+            }, FADE_INTERVAL);
+        }
+
+        // 修改数据加载函数
+        async function loadTimelineData() {
+            try {
+                const response = await fetch('http://localhost:3000/api/timeline');
+                const timelineData = await response.json();
+                const timeline = document.querySelector('.timeline');
+                
+                // 清空现有内容
+                timeline.innerHTML = '';
+
+                // 添加时间线项目
+                timelineData.forEach((item, index) => {
+                    const timelineItem = document.createElement('div');
+                    timelineItem.className = 'timeline-item';
+                    
+                    const eventIcon = getEventIcon(item.title);
+                    
+                    let mediaHTML = '';
+                    if (item.media && item.media.length > 0) {
+                        mediaHTML = '<div class="timeline-media">';
+                        mediaHTML += '<div class="timeline-media-overlay"></div>';
+                        item.media.forEach((media, mediaIndex) => {
+                            mediaHTML += media.type === 'video' ? 
+                                `<video src="${media.url}" controls></video>` :
+                                `<img src="${media.url}" alt="Media">`;
+                        });
+                        mediaHTML += '</div>';
+                    }
+
+                    timelineItem.innerHTML = `
+                        <div class="timeline-header">
+                            <div class="timeline-date">${item.date}</div>
+                            <div class="timeline-node">${eventIcon}</div>
+                        </div>
+                        <div class="timeline-content">
+                            <div class="edit-button" onclick="showEditForm(this)">✏️</div>
+                            <div class="timeline-preview">
+                                <div class="preview-title">${item.title}</div>
+                                <div class="preview-date">${item.date}</div>
+                                <div class="preview-description">${item.description}</div>
+                            </div>
+                            <div class="timeline-date">${item.date}</div>
+                            <h3 class="timeline-title">${item.title}</h3>
+                            <p class="timeline-description">${item.description}</p>
+                            ${mediaHTML}
+                        </div>
+                    `;
+
+                    timeline.appendChild(timelineItem);
+                });
+
+                initializeCarousels();
+                initializeTimeline();
+            } catch (error) {
+                console.error('加载数据失败:', error);
+            }
+        }
+
+        // 根据事件标题返回对应的图标
+        function getEventIcon(title) {
+            const iconMap = {
+                '相遇': '💑',
+                '情人节': '💝',
+                '旅行': '✈️',
+                '生日': '🎂',
+                '纪念日': '🎉',
+                '求婚': '💍',
+                '婚礼': '👰',
+                '节日': '🎊',
+                '日常': '💕',
+                '惊喜': '🎁'
+            };
+
+            for (const [key, icon] of Object.entries(iconMap)) {
+                if (title.includes(key)) {
+                    return icon;
+                }
+            }
+            return '💖'; // 默认图标
+        }
+
+        // 根据事件内容生成标签
+        function getEventTags(title, description) {
+            const tags = [];
+            
+            // 根据标题添加标签
+            if (title.includes('相遇')) tags.push('初遇');
+            if (title.includes('情人节')) tags.push('节日');
+            if (title.includes('旅行')) tags.push('旅行');
+            if (title.includes('生日')) tags.push('生日');
+            if (title.includes('纪念日')) tags.push('纪念日');
+            if (title.includes('求婚')) tags.push('求婚');
+            if (title.includes('婚礼')) tags.push('婚礼');
+            
+            // 根据描述添加标签
+            if (description.includes('惊喜')) tags.push('惊喜');
+            if (description.includes('礼物')) tags.push('礼物');
+            if (description.includes('旅行')) tags.push('旅行');
+            if (description.includes('美食')) tags.push('美食');
+            if (description.includes('照片')) tags.push('照片');
+            if (description.includes('视频')) tags.push('视频');
+            
+            // 确保标签不重复
+            return [...new Set(tags)];
+        }
+
+        // 修改保存数据函数
+        async function saveTimelineData(data) {
+            try {
+                const response = await fetch('http://localhost:3000/api/timeline', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                return await response.json();
+            } catch (error) {
+                console.error('保存失败:', error);
+            }
+        }
+
+        // 修改文件上传函数
+        async function uploadMedia(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            try {
+                const response = await fetch('http://localhost:3000/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                return await response.json();
+            } catch (error) {
+                console.error('上传失败:', error);
+            }
+        }
+
+        // 修改表单提交处理
+        document.getElementById('timelineForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const date = document.getElementById('date').value;
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const mediaFiles = document.getElementById('media').files;
+
+            const mediaData = [];
+            if (mediaFiles.length > 0) {
+                for (let i = 0; i < mediaFiles.length; i++) {
+                    const file = mediaFiles[i];
+                    const uploadResult = await uploadMedia(file);
+                    if (uploadResult) {
+                        mediaData.push({
+                            type: uploadResult.type,
+                            url: uploadResult.url
+                        });
+                    }
+                }
+            }
+
+            const timelineData = {
+                date: date,
+                title: title,
+                description: description,
+                media: mediaData
+            };
+
+            await saveTimelineData(timelineData);
+            loadTimelineData();
+            
+            this.reset();
+            hideAddForm();
+        });
+
+        // 修改编辑表单提交处理
+        document.getElementById('editTimelineForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const date = document.getElementById('editDate').value;
+            const title = document.getElementById('editTitle').value;
+            const description = document.getElementById('editDescription').value;
+            const mediaFiles = document.getElementById('editMedia').files;
+
+            const mediaData = [];
+            if (mediaFiles.length > 0) {
+                for (let i = 0; i < mediaFiles.length; i++) {
+                    const file = mediaFiles[i];
+                    const uploadResult = await uploadMedia(file);
+                    if (uploadResult) {
+                        mediaData.push({
+                            type: uploadResult.type,
+                            url: uploadResult.url
+                        });
+                    }
+                }
+            }
+
+            const timelineData = {
+                date: date,
+                title: title,
+                description: description,
+                media: mediaData
+            };
+
+            const currentItem = document.querySelector('.timeline-item.focused');
+            if (currentItem) {
+                const itemId = currentItem.getAttribute('data-id');
+                try {
+                    await fetch(`http://localhost:3000/api/timeline/${itemId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(timelineData)
+                    });
+                    loadTimelineData();
+                } catch (error) {
+                    console.error('更新失败:', error);
+                }
+            }
+            
+            this.reset();
+            hideEditForm();
+        });
+
+        // 添加表单功能
+        function showAddForm() {
+            document.getElementById('addOverlay').classList.add('active');
+            document.getElementById('addForm').classList.add('active');
+        }
+
+        function hideAddForm() {
+            document.getElementById('addOverlay').classList.remove('active');
+            document.getElementById('addForm').classList.remove('active');
+        }
+
+        // 编辑表单功能
+        function showEditForm(button) {
+            const content = button.closest('.timeline-content');
+            const date = content.querySelector('.timeline-date').textContent;
+            const title = content.querySelector('.timeline-title').textContent;
+            const description = content.querySelector('.timeline-description').textContent;
+
+            document.getElementById('editDate').value = date;
+            document.getElementById('editTitle').value = title;
+            document.getElementById('editDescription').value = description;
+
+            document.getElementById('editOverlay').classList.add('active');
+            document.getElementById('editForm').classList.add('active');
+        }
+
+        function hideEditForm() {
+            document.getElementById('editOverlay').classList.remove('active');
+            document.getElementById('editForm').classList.remove('active');
+        }
+
+        // 修改显示弹窗函数
+        function showPopup(event) {
+            const content = event.querySelector('.timeline-content');
+            const date = content.querySelector('.timeline-date').textContent;
+            const title = content.querySelector('.timeline-title').textContent;
+            const description = content.querySelector('.timeline-description').textContent;
+            const mediaContainer = content.querySelector('.timeline-media');
+            
+            // 更新内容
+            document.querySelector('.popup-date').textContent = date;
+            document.querySelector('.popup-title').textContent = title;
+            document.querySelector('.popup-description').textContent = description;
+            
+            // 更新媒体内容
+            const mediaGrid = document.getElementById('popupMediaGrid');
+            mediaGrid.innerHTML = '';
+            if (mediaContainer) {
+                const mediaItems = mediaContainer.querySelectorAll('img, video');
+                mediaItems.forEach(media => {
+                    const mediaItem = document.createElement('div');
+                    mediaItem.className = 'popup-media-item';
+                    if (media.tagName.toLowerCase() === 'video') {
+                        const video = document.createElement('video');
+                        video.src = media.src;
+                        video.controls = true;
+                        mediaItem.appendChild(video);
+                    } else {
+                        const img = document.createElement('img');
+                        img.src = media.src;
+                        img.alt = media.alt;
+                        mediaItem.appendChild(img);
+                    }
+                    mediaGrid.appendChild(mediaItem);
+                });
+            }
+
+            // 显示弹窗
+            document.getElementById('popupOverlay').classList.add('active');
+            document.getElementById('popupCard').classList.add('active');
+
+            // 保存当前事件索引
+            const index = Array.from(document.querySelectorAll('.timeline-item')).indexOf(event);
+            document.getElementById('popupCard').setAttribute('data-index', index);
+        }
+
+        // 隐藏弹窗
+        function hidePopup() {
+            document.getElementById('popupOverlay').classList.remove('active');
+            document.getElementById('popupCard').classList.remove('active');
+        }
+
+        // 编辑当前事件
+        function editCurrentEvent() {
+            const index = document.getElementById('popupCard').getAttribute('data-index');
+            const item = document.querySelectorAll('.timeline-item')[index];
+            showEditForm(item.querySelector('.edit-button'));
+            hidePopup();
+        }
+
+        // 删除当前事件
+        function deleteCurrentEvent() {
+            if (confirm('确定要删除这个回忆吗？')) {
+                const index = document.getElementById('popupCard').getAttribute('data-index');
+                const timelineData = JSON.parse(localStorage.getItem('timelineData')) || [];
+                timelineData.splice(index, 1);
+                localStorage.setItem('timelineData', JSON.stringify(timelineData));
+                loadTimelineData();
+                hidePopup();
+            }
+        }
+
+        // 添加时间线交互效果初始化函数
+        function initializeTimeline() {
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            
+            // 更新聚焦状态
+            function updateFocusedItems() {
+                const viewportHeight = window.innerHeight;
+                const viewportCenter = viewportHeight / 2;
+                
+                timelineItems.forEach(item => {
+                    const rect = item.getBoundingClientRect();
+                    const itemCenter = rect.top + rect.height / 2;
+                    const distanceFromCenter = Math.abs(itemCenter - viewportCenter);
+                    
+                    if (distanceFromCenter < viewportHeight * 0.25) {
+                        item.classList.add('focused');
+                        const scale = 1 - (distanceFromCenter / (viewportHeight * 0.25)) * 0.3;
+                        item.style.transform = `translateY(0) scale(${scale})`;
+                        item.style.opacity = '1';
+                    } else {
+                        item.classList.remove('focused');
+                        item.style.transform = 'translateY(20px) scale(0.8)';
+                        item.style.opacity = '0.5';
+                    }
+                });
+            }
+
+            // 初始更新一次
+            updateFocusedItems();
+
+            // 滚动时更新
+            let scrollTimeout;
+            window.addEventListener('scroll', () => {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    updateFocusedItems();
+                }, 50);
+            });
+
+            // 添加 IntersectionObserver 来检测可见性
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -100px 0px'
+            });
+
+            timelineItems.forEach(item => {
+                observer.observe(item);
+            });
+        }
+
+        // 初始化轮播功能
+        function initializeCarousels() {
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            
+            timelineItems.forEach(item => {
+                const mediaContainer = item.querySelector('.timeline-media');
+                if (!mediaContainer) return;
+                
+                const mediaItems = mediaContainer.querySelectorAll('img, video');
+                if (mediaItems.length <= 1) return;
+                
+                const dots = item.querySelectorAll('.carousel-dot');
+                let currentIndex = 0;
+                let interval;
+                
+                // 显示指定索引的媒体项
+                function showMedia(index) {
+                    mediaItems.forEach((media, i) => {
+                        media.style.display = i === index ? 'block' : 'none';
+                    });
+                    dots.forEach((dot, i) => {
+                        dot.classList.toggle('active', i === index);
+                    });
+                    currentIndex = index;
+                }
+                
+                // 自动轮播
+                function startAutoPlay() {
+                    interval = setInterval(() => {
+                        const nextIndex = (currentIndex + 1) % mediaItems.length;
+                        showMedia(nextIndex);
+                    }, 3000);
+                }
+                
+                // 停止自动轮播
+                function stopAutoPlay() {
+                    clearInterval(interval);
+                }
+                
+                // 点击指示器切换
+                dots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => {
+                        showMedia(index);
+                        stopAutoPlay();
+                        startAutoPlay();
+                    });
+                });
+                
+                // 鼠标悬停时停止自动轮播
+                mediaContainer.addEventListener('mouseenter', stopAutoPlay);
+                mediaContainer.addEventListener('mouseleave', startAutoPlay);
+                
+                // 初始化显示第一个媒体项
+                showMedia(0);
+                startAutoPlay();
+            });
+        }
+    </script>
+</body>
+</html> 

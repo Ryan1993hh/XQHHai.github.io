@@ -1,0 +1,3910 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>美好时光 - 向&涵的幸福花园</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 导航栏样式 */
+        .navbar {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff9a9e;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            color: #333;
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #ff9a9e;
+        }
+
+        /* 标题样式 */
+        .title-container {
+            text-align: center;
+            margin-top: 100px;
+            position: relative;
+            padding: 20px;
+        }
+
+        .title {
+            font-size: 36px;
+            color: #ff6b6b;
+            position: relative;
+            display: inline-block;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .title-line {
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #ff6b6b, #4facfe);
+            transform: scaleX(0);
+            transform-origin: left;
+            animation: lineMove 3s infinite alternate;
+        }
+
+        @keyframes lineMove {
+            0% {
+                transform: scaleX(0);
+                transform-origin: left;
+            }
+            100% {
+                transform: scaleX(1);
+                transform-origin: right;
+            }
+        }
+
+        /* 时间显示样式 */
+        .time-container {
+            text-align: center;
+            margin: 20px auto;
+            width: fit-content;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .time-container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .time-container:active {
+            transform: scale(0.98);
+        }
+
+        .time-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 107, 107, 0.05), transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 107, 107, 0.05), transparent 50%);
+            border-radius: 25px;
+            z-index: -1;
+        }
+
+        .current-time {
+            font-size: 24px;
+            color: #ff6b6b;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .current-time::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #ff6b6b, transparent);
+            opacity: 0.3;
+        }
+
+        /* 温馨话语样式 */
+        .sweet-messages {
+            text-align: center;
+            min-height: 28px;
+            margin-top: 0;
+            position: relative;
+            width: 100%;
+        }
+
+        .sweet-message {
+            font-size: 16px;
+            color: #ff6b6b;
+            margin: 0;
+            opacity: 0;
+            transform: translateY(5px);
+            transition: all 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: absolute;
+            width: 100%;
+            left: 0;
+            top: 0;
+            font-style: italic;
+            white-space: nowrap;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            font-weight: 500;
+        }
+
+        .sweet-message.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+        }
+
+        /* 主内容区域 */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 15px;
+            gap: 20px;
+        }
+
+        /* 修改上部分布局 */
+        .top-section {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            height: calc(80vh - 100px);
+            min-height: 600px;
+        }
+
+        /* 修改下部分布局 */
+        .bottom-section {
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            margin-top: 20px;
+            height: calc(90vh - 100px);
+            min-height: 800px;
+        }
+
+        /* 侧边容器样式 */
+        .side-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-width: 0;
+            height: calc(80vh - 100px); /* 增加高度 */
+            min-height: 600px; /* 设置最小高度 */
+        }
+
+        /* 卡片基础样式 */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden; /* 确保内容不会溢出 */
+        }
+
+        .card-title {
+            font-size: 18px;
+            color: #ff6b6b;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        /* 添加按钮样式 */
+        .add-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            color: #ff6b6b;
+            font-size: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .add-button:hover {
+            transform: scale(1.1) rotate(90deg);
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 新的四象限样式 */
+        .quadrant-container {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 25px;
+            background: linear-gradient(135deg, #f6f9fc, #e9f2f9);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quadrant {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 25px;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            overflow-y: auto;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+        }
+
+        .quadrant:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .quadrant-title {
+            color: #2c3e50;
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            letter-spacing: 1px;
+            position: relative;
+            padding-bottom: 12px;
+            flex-shrink: 0;
+        }
+
+        .quadrant-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            border-radius: 3px;
+        }
+
+        .task-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            min-height: 0;
+        }
+
+        .task-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .task-list::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 4px;
+        }
+
+        .task-list::-webkit-scrollbar-thumb {
+            background: rgba(52, 152, 219, 0.3);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .task-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(52, 152, 219, 0.5);
+        }
+
+        /* 添加任务项动画样式 */
+        .task-item {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* 改为居中对齐 */
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+            transform-origin: center;
+            animation: taskAppear 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform, opacity;
+        }
+
+        @keyframes taskAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes taskMove {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(var(--move-distance));
+                opacity: 1;
+            }
+        }
+
+        .task-item.moving {
+            animation: taskMove 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .task-item.completed {
+            background: rgba(52, 152, 219, 0.05);
+            border-left: 3px solid #3498db;
+        }
+
+        .task-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: rgba(52, 152, 219, 0.3);
+        }
+
+        .task-item.dragging {
+            opacity: 0.5;
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .quadrant.drag-over {
+            border-color: #3498db;
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+
+        .task-content {
+            flex: 1;
+            padding-right: 15px;
+        }
+
+        .task-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0; /* 移除底部间距 */
+        }
+
+        .task-title {
+            font-size: 16px;
+            color: #2c3e50;
+            font-weight: 600;
+            margin-right: 10px; /* 添加右侧间距 */
+            white-space: nowrap; /* 防止标题换行 */
+        }
+
+        .task-description {
+            font-size: 14px;
+            color: #7f8c8d;
+            line-height: 1.5;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap; /* 保持在一行 */
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .task-item:hover .task-actions {
+            opacity: 1;
+        }
+
+        .task-button {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #7f8c8d;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .task-button.edit {
+            color: #3498db;
+        }
+
+        .task-button.delete {
+            color: #e74c3c;
+        }
+
+        .quadrant-add-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            background: #3498db;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            z-index: 10;
+        }
+
+        .quadrant-add-button:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+
+        .quadrant-add-button:active {
+            transform: scale(0.95);
+        }
+
+        .memory-container, .countdown-container {
+            overflow-y: auto;
+        }
+
+        .memory-list, .countdown-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-right: 5px;
+        }
+
+        .memory-list::-webkit-scrollbar,
+        .countdown-list::-webkit-scrollbar,
+        .future-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .memory-list::-webkit-scrollbar-track,
+        .countdown-list::-webkit-scrollbar-track,
+        .future-list::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 3px;
+        }
+
+        .memory-list::-webkit-scrollbar-thumb,
+        .countdown-list::-webkit-scrollbar-thumb,
+        .future-list::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 3px;
+        }
+
+        .memory-list::-webkit-scrollbar-thumb:hover,
+        .countdown-list::-webkit-scrollbar-thumb:hover,
+        .future-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .future-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .future-item {
+            background: white;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .future-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .future-item-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .future-item-icon {
+            font-size: 20px;
+            color: #ff6b6b;
+        }
+
+        .future-item-text {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .future-item-actions {
+            display: flex;
+            gap: 8px;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .future-item:hover .future-item-actions {
+            opacity: 1;
+        }
+
+        /* 时间计算样式 */
+        .time-duration {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+            position: relative;
+            top: -5px; /* 微调时间差显示位置 */
+        }
+
+        .time-duration.memory {
+            color: #ff6b6b;
+        }
+
+        .time-duration.countdown {
+            color: #4facfe;
+        }
+
+        /* 事件项样式 */
+        .event-item {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .event-content {
+            flex: 1;
+            padding-right: 60px;
+        }
+
+        .event-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .event-title {
+            font-size: 16px;
+            color: #ff6b6b;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .event-time {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+            margin: 0;
+        }
+
+        .event-description {
+            font-size: 14px;
+            color: #666;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .time-duration {
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+            margin: 0;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .time-duration.memory {
+            color: #ff6b6b;
+        }
+
+        .time-duration.countdown {
+            color: #4facfe;
+        }
+
+        /* 统一事件操作按钮样式 */
+        .event-actions, .task-actions, .wish-item-actions {
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+        }
+
+        .event-item:hover .event-actions,
+        .task-item:hover .task-actions,
+        .wish-item:hover .wish-item-actions {
+            opacity: 1;
+        }
+
+        .event-button, .task-button {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 0;
+        }
+
+        .event-button:hover, .task-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .event-button.edit, .task-button.edit {
+            color: #3498db;
+        }
+
+        .event-button.delete, .task-button.delete {
+            color: #e74c3c;
+        }
+
+        /* 更新图标SVG */
+        .edit-icon {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%234facfe"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>');
+            width: 16px;
+            height: 16px;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .delete-icon {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ff6b6b"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>');
+            width: 16px;
+            height: 16px;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .pin-icon {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ff6b6b"><path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2z"/></svg>');
+            width: 16px;
+            height: 16px;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .event-button:hover .edit-icon,
+        .event-button:hover .delete-icon,
+        .task-button:hover .edit-icon,
+        .task-button:hover .delete-icon {
+            opacity: 1;
+        }
+
+        /* 修改任务项样式 */
+        .task-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .task-content {
+            flex: 1;
+            padding-right: 60px;
+        }
+
+        .task-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .task-title {
+            font-size: 16px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .task-description {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 修改愿望项样式 */
+        .wish-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            min-height: 60px; /* 确保卡片有足够的高度 */
+        }
+
+        .wish-item-content {
+            flex: 1;
+            padding-right: 100px; /* 增加右侧内边距，为操作按钮留出更多空间 */
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative; /* 添加相对定位 */
+        }
+
+        .wish-item-icon {
+            font-size: 20px;
+            color: #ff6b6b;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 8px;
+        }
+
+        .wish-item-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .wish-item-title {
+            font-size: 14px;
+            color: #333;
+            margin: 0;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .wish-item-description {
+            font-size: 12px;
+            color: #666;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.4; /* 调整行高，使文本垂直居中 */
+        }
+
+        /* 修改愿望项操作按钮位置 */
+        .wish-item-actions {
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(calc(-50% + 15px)); /* 向下平移15px */
+            z-index: 2;
+        }
+
+        .wish-item:hover .wish-item-actions {
+            opacity: 1;
+        }
+
+        .wish-item-tag {
+            position: relative;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.2);
+            margin-right: 5px;
+            display: inline-block;
+            max-width: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .wish-item-tags {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            max-width: 200px;
+            justify-content: flex-end;
+            z-index: 1;
+        }
+
+        .wish-item-tags .wish-item-tag:nth-child(n+4) {
+            display: none;
+        }
+
+        .wish-item-tags .wish-item-tag:last-child {
+            margin-right: 0;
+        }
+
+        /* 标签样式优化 */
+        .form-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            position: relative;
+        }
+
+        .form-tag {
+            padding: 6px 12px;
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff6b6b;
+            border-radius: 15px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 107, 107, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            position: relative;
+        }
+
+        .form-tag .remove-tag {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 107, 107, 0.2);
+            margin-left: 5px;
+            font-size: 12px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .form-tag:hover .remove-tag {
+            opacity: 1;
+        }
+
+        .form-tag .remove-tag:hover {
+            background: rgba(255, 107, 107, 0.4);
+        }
+
+        .add-tag-input {
+            padding: 6px 12px;
+            border: 1px dashed rgba(255, 107, 107, 0.3);
+            border-radius: 15px;
+            font-size: 13px;
+            color: #666;
+            background: transparent;
+            width: 100px;
+            transition: all 0.3s ease;
+        }
+
+        .add-tag-input:focus {
+            outline: none;
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+        }
+
+        /* 图标样式 */
+        .icon {
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .event-button:hover .icon {
+            transform: scale(1.1);
+        }
+
+        .edit-icon::before {
+            content: '✏️';
+        }
+
+        .delete-icon::before {
+            content: '🗑️';
+        }
+
+        .pin-icon::before {
+            content: '📌';
+        }
+
+        /* 全屏时钟样式 */
+        .fullscreen-clock {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .fullscreen-clock.active {
+            display: flex;
+        }
+
+        .clock-content {
+            color: white;
+            text-align: center;
+        }
+
+        .clock-time {
+            font-size: 72px;
+            margin-bottom: 20px;
+        }
+
+        .clock-date {
+            font-size: 36px;
+            opacity: 0.8;
+        }
+
+        .close-clock {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        /* 背景动画 */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .floating-element {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 154, 158, 0.3);
+            border-radius: 50%;
+            animation: float 15s infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(100px, -50px) rotate(90deg);
+            }
+            50% {
+                transform: translate(0, -100px) rotate(180deg);
+            }
+            75% {
+                transform: translate(-100px, -50px) rotate(270deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+            }
+        }
+
+        /* 添加表单样式 */
+        .add-form {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            display: none;
+            min-width: 320px;
+            border: 2px solid #ffd6e0;
+        }
+
+        .add-form.active {
+            display: block;
+            animation: formPop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes formPop {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .form-title {
+            font-size: 20px;
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .form-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b6b, #ffd6e0);
+            border-radius: 3px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ffd6e0;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: #fff;
+        }
+
+        .form-input:focus {
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.1);
+            outline: none;
+        }
+
+        .form-group textarea.form-input {
+            min-height: 80px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        .form-label .optional {
+            font-size: 12px;
+            color: #999;
+            margin-left: 5px;
+            font-weight: normal;
+        }
+
+        /* 可爱的时间选择器样式 */
+        .cute-date-picker {
+            position: relative;
+            width: 100%;
+        }
+
+        .cute-date-picker input[type="date"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ffd6e0;
+            border-radius: 12px;
+            font-size: 14px;
+            color: #666;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .cute-date-picker input[type="date"]::-webkit-calendar-picker-indicator {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23ff6b6b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>') no-repeat center;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            filter: drop-shadow(0 2px 4px rgba(255, 107, 107, 0.2));
+            transition: all 0.3s ease;
+        }
+
+        .cute-date-picker input[type="date"]::-webkit-calendar-picker-indicator:hover {
+            transform: scale(1.1);
+        }
+
+        .cute-date-picker::before {
+            content: '📅';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            pointer-events: none;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(-50%) scale(1);
+            }
+            50% {
+                transform: translateY(-50%) scale(1.1);
+            }
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .form-button {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .form-button:hover::before {
+            transform: translateX(0);
+        }
+
+        .form-button.cancel {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e9ecef;
+        }
+
+        .form-button.submit {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.2);
+        }
+
+        .form-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .form-button:active {
+            transform: translateY(0);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* 幸福未来模块样式 */
+        .future-container {
+            flex: 1;
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .future-categories {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .future-category {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .future-category:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .future-category.active {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .future-category-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .future-category-title {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* 愿望清单模块样式 */
+        .wish-container {
+            flex: 1;
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: calc(80vh - 100px); /* 增加高度 */
+            min-height: 600px; /* 设置最小高度 */
+        }
+
+        .wish-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .wish-header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .wish-title {
+            font-size: 20px;
+            color: #ff6b6b;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 5px;
+            z-index: 2;
+        }
+
+        .wish-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #ff6b6b, transparent);
+        }
+
+        .wish-category-select {
+            position: relative;
+            width: 150px;
+        }
+
+        .wish-category-select select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid #ff6b6b;
+            border-radius: 10px;
+            background: white;
+            color: #333;
+            font-size: 14px;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            padding-right: 30px;
+        }
+
+        .wish-category-select::after {
+            content: '▼';
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #ff6b6b;
+            font-size: 12px;
+            pointer-events: none;
+        }
+
+        .wish-category-select select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+        }
+
+        .wish-category-select select option {
+            padding: 8px;
+        }
+
+        .wish-add-button {
+            position: relative;
+            width: 28px;
+            height: 28px;
+            background: #ff6b6b;
+            border-radius: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            color: white;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            z-index: 10;
+        }
+
+        .wish-add-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .wish-add-button:active {
+            transform: scale(0.95);
+        }
+
+        .wish-add-button::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border-radius: 17px;
+            background: rgba(255, 107, 107, 0.1);
+            z-index: -1;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .wish-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .wish-item {
+            background: white;
+            border-radius: 12px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wish-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #ff6b6b;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .wish-item:hover::before {
+            opacity: 1;
+        }
+
+        .wish-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .wish-item-content {
+            flex: 1;
+            padding-right: 100px; /* 增加右侧内边距，为操作按钮留出更多空间 */
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative; /* 添加相对定位 */
+        }
+
+        .wish-item-icon {
+            font-size: 20px;
+            color: #ff6b6b;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 8px;
+        }
+
+        .wish-item-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .wish-item-title {
+            font-size: 14px;
+            color: #333;
+            margin: 0;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .wish-item-description {
+            font-size: 12px;
+            color: #666;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.4; /* 调整行高，使文本垂直居中 */
+        }
+
+        /* 修改愿望项操作按钮位置 */
+        .wish-item-actions {
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(calc(-50% + 15px)); /* 向下平移15px */
+            z-index: 2;
+        }
+
+        .wish-item:hover .wish-item-actions {
+            opacity: 1;
+        }
+
+        .wish-item-tag {
+            position: relative;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.2);
+            margin-right: 5px;
+            display: inline-block;
+            max-width: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .wish-item-tags {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            max-width: 200px;
+            justify-content: flex-end;
+            z-index: 1;
+        }
+
+        .wish-item-tags .wish-item-tag:nth-child(n+4) {
+            display: none;
+        }
+
+        .wish-item-tags .wish-item-tag:last-child {
+            margin-right: 0;
+        }
+
+        /* 标签样式优化 */
+        .form-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            position: relative;
+        }
+
+        .form-tag {
+            padding: 6px 12px;
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff6b6b;
+            border-radius: 15px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 107, 107, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            position: relative;
+        }
+
+        .form-tag .remove-tag {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 107, 107, 0.2);
+            margin-left: 5px;
+            font-size: 12px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .form-tag:hover .remove-tag {
+            opacity: 1;
+        }
+
+        .form-tag .remove-tag:hover {
+            background: rgba(255, 107, 107, 0.4);
+        }
+
+        .add-tag-input {
+            padding: 6px 12px;
+            border: 1px dashed rgba(255, 107, 107, 0.3);
+            border-radius: 15px;
+            font-size: 13px;
+            color: #666;
+            background: transparent;
+            width: 100px;
+            transition: all 0.3s ease;
+        }
+
+        .add-tag-input:focus {
+            outline: none;
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+        }
+
+        /* 图标样式 */
+        .icon {
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .event-button:hover .icon {
+            transform: scale(1.1);
+        }
+
+        .edit-icon::before {
+            content: '✏️';
+        }
+
+        .delete-icon::before {
+            content: '🗑️';
+        }
+
+        .pin-icon::before {
+            content: '📌';
+        }
+
+        /* 添加拖拽相关样式 */
+        .event-item {
+            cursor: move;
+        }
+        
+        .event-item.dragging {
+            opacity: 0.5;
+            background: rgba(255, 107, 107, 0.1);
+        }
+        
+        .quadrant {
+            position: relative;
+        }
+        
+        .quadrant.drag-over {
+            border-color: #ff6b6b;
+            background-color: rgba(255, 107, 107, 0.1);
+        }
+
+        .wish-item {
+            cursor: default;
+        }
+
+        /* 修改图标样式 */
+        .icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .edit-icon {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%234facfe"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>');
+        }
+
+        .delete-icon {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ff6b6b"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>');
+        }
+
+        .pin-icon {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ff6b6b"><path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2z"/></svg>');
+        }
+
+        /* 图标基础样式 */
+        .icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+
+        /* 编辑图标 */
+        .edit-icon {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%234facfe"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>');
+        }
+
+        /* 删除图标 */
+        .delete-icon {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ff6b6b"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>');
+        }
+
+        /* 固定图标 */
+        .pin-icon {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ff6b6b"><path d="M16 12V4h1V2H7v2h1v8l-2 2v2h5.2v6h1.6v-6H18v-2l-2-2z"/></svg>');
+        }
+
+        /* 图标悬停效果 */
+        .event-button:hover .icon,
+        .task-button:hover .icon {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        /* 删除重复的图标样式定义 */
+        .edit-icon::before,
+        .delete-icon::before,
+        .pin-icon::before {
+            display: none;
+        }
+
+        /* 添加图标选择器样式 */
+        .icon-selector {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            max-height: 120px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .icon-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 20px;
+        }
+
+        .icon-option:hover {
+            background: #f0f2f5;
+            border-color: #ff6b6b;
+        }
+
+        .icon-option.selected {
+            background: rgba(255, 107, 107, 0.1);
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+        }
+
+        /* 修改标签容器样式 */
+        #formTags {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin-top: 8px;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        /* 修改标签样式 */
+        .form-tag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 8px;
+            background: #f0f2f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        /* 修改添加标签输入框样式 */
+        .add-tag-input {
+            grid-column: span 3;
+            padding: 4px 8px;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 12px;
+            background: white;
+            outline: none;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .add-tag-input:focus {
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.1);
+        }
+
+        /* 修改滚动条样式 */
+        .icon-selector::-webkit-scrollbar,
+        #formTags::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .icon-selector::-webkit-scrollbar-track,
+        #formTags::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .icon-selector::-webkit-scrollbar-thumb,
+        #formTags::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 3px;
+        }
+
+        .icon-selector::-webkit-scrollbar-thumb:hover,
+        #formTags::-webkit-scrollbar-thumb:hover {
+            background: #999;
+        }
+
+        /* 修改弹窗样式 */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        /* 修改表单组样式 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        /* 修改弹窗内容区域样式 */
+        .popup-content {
+            max-height: calc(80vh - 100px);
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        /* 修改弹窗滚动条样式 */
+        .popup-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .popup-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .popup-content::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 3px;
+        }
+
+        .popup-content::-webkit-scrollbar-thumb:hover {
+            background: #999;
+        }
+
+        /* 修改标签选中状态样式 */
+        .form-tag.active {
+            background: rgba(255, 107, 107, 0.2);
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+            font-weight: 500;
+        }
+
+        /* 修改标签样式 */
+        .form-tag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 8px;
+            background: #f0f2f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        /* 修改删除确认弹窗样式 */
+        .delete-confirm-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            z-index: 1000;
+            width: 360px;
+            text-align: center;
+            animation: popupFadeIn 0.3s ease;
+        }
+
+        .delete-confirm-popup .popup-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .delete-confirm-popup .popup-message {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .delete-confirm-popup .popup-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .delete-confirm-popup .popup-button {
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            outline: none;
+        }
+
+        .delete-confirm-popup .cancel-button {
+            background: #f0f2f5;
+            color: #666;
+        }
+
+        .delete-confirm-popup .cancel-button:hover {
+            background: #e0e0e0;
+        }
+
+        .delete-confirm-popup .confirm-button {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .delete-confirm-popup .confirm-button:hover {
+            background: #ff5252;
+            transform: translateY(-1px);
+        }
+
+        @keyframes popupFadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -48%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        /* 添加遮罩层样式 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        /* 添加任务复选框样式 */
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #3498db;
+            border-radius: 50%;
+            margin-right: 10px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .task-checkbox:hover {
+            border-color: #2980b9;
+            transform: scale(1.1);
+        }
+
+        .task-checkbox.completed {
+            background: #3498db;
+            border-color: #3498db;
+        }
+
+        .task-checkbox.completed::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+        }
+
+        .task-item.completed {
+            background: rgba(52, 152, 219, 0.05);
+            border-left: 3px solid #3498db;
+        }
+
+        .task-item.completed .task-title {
+            text-decoration: line-through;
+            color: #95a5a6;
+        }
+
+        .task-item.completed .task-description {
+            color: #bdc3c7;
+        }
+
+        /* 音乐播放器样式 */
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .music-controls {
+            display: flex;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .music-button, .upload-button {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: #ff6b6b;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 20px;
+        }
+
+        .music-button:hover, .upload-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .music-button.playing {
+            animation: rotate 3s linear infinite;
+        }
+
+        .music-icon, .upload-icon {
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* 添加音乐上传按钮样式 */
+        .music-upload {
+            position: relative;
+        }
+
+        .upload-button {
+            background: #4facfe;
+        }
+
+        .upload-button:hover {
+            background: #2196f3;
+        }
+
+        /* 音乐URL输入框样式 */
+        .music-url {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .url-input {
+            width: 200px;
+            padding: 8px 12px;
+            border: 2px solid #4facfe;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #333;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+        }
+
+        .url-input:focus {
+            outline: none;
+            border-color: #2196f3;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        .url-button {
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 50%;
+            background: #4facfe;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .url-button:hover {
+            transform: scale(1.1);
+            background: #2196f3;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        .url-icon {
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="zhu ye.html" class="logo">向&涵的幸福花园</a>
+            <div class="nav-links">
+                <a href="ai qing yin ji.html" class="nav-link">爱情印记</a>
+                <a href="xing fu shun jian.html" class="nav-link">幸福瞬间</a>
+                <a href="mei hao shi guang.html" class="nav-link">美好时光</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 标题 -->
+    <div class="title-container">
+        <h1 class="title">记录美好时光
+            <div class="title-line"></div>
+        </h1>
+    </div>
+
+    <!-- 时间和温馨话语 -->
+    <div class="time-container" id="timeContainer">
+        <div class="current-time" id="currentTime"></div>
+        <div class="sweet-messages" id="sweetMessages"></div>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <!-- 上部分：纪念日、幸福未来、倒计时 -->
+        <div class="top-section">
+            <!-- 纪念日 -->
+            <div class="side-container">
+                <div class="card memory-container">
+                    <h3 class="card-title">纪念日</h3>
+                    <div class="add-button" onclick="showAddForm('memory')">+</div>
+                    <div class="memory-list" id="memoryList"></div>
+                </div>
+            </div>
+
+            <!-- 幸福未来 -->
+            <div class="wish-container">
+                <div class="wish-header">
+                    <div class="wish-header-left">
+                        <div class="wish-category-select">
+                            <select id="wishCategory" onchange="switchCategory(this)">
+                                <option value="food">美食探索</option>
+                                <option value="travel">旅行计划</option>
+                                <option value="activity">想做的事</option>
+                                <option value="shopping">购物清单</option>
+                            </select>
+                        </div>
+                        <div class="wish-title">愿望清单</div>
+                    </div>
+                    <button class="wish-add-button" onclick="showAddForm('wish')">+</button>
+                </div>
+                <div class="wish-list" id="wishList">
+                    <!-- 愿望列表 -->
+                </div>
+            </div>
+
+            <!-- 倒计时 -->
+            <div class="side-container">
+                <div class="card countdown-container">
+                    <h3 class="card-title">倒计时</h3>
+                    <div class="add-button" onclick="showAddForm('countdown')">+</div>
+                    <div class="countdown-list" id="countdownList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 下部分：四象限 -->
+        <div class="bottom-section">
+            <!-- 四象限记事本 -->
+            <div class="quadrant-container">
+                <div class="quadrant" id="quadrant1">
+                    <h3 class="quadrant-title">重要且紧急</h3>
+                    <div class="add-button" onclick="showAddForm(1)">+</div>
+                    <div class="task-list"></div>
+                </div>
+                <div class="quadrant" id="quadrant2">
+                    <h3 class="quadrant-title">重要不紧急</h3>
+                    <div class="add-button" onclick="showAddForm(2)">+</div>
+                    <div class="task-list"></div>
+                </div>
+                <div class="quadrant" id="quadrant3">
+                    <h3 class="quadrant-title">紧急不重要</h3>
+                    <div class="add-button" onclick="showAddForm(3)">+</div>
+                    <div class="task-list"></div>
+                </div>
+                <div class="quadrant" id="quadrant4">
+                    <h3 class="quadrant-title">不紧急不重要</h3>
+                    <div class="add-button" onclick="showAddForm(4)">+</div>
+                    <div class="task-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全屏时钟 -->
+    <div class="fullscreen-clock" id="fullscreenClock">
+        <div class="clock-content">
+            <div class="clock-time" id="fullscreenTime"></div>
+            <div class="clock-date" id="fullscreenDate"></div>
+        </div>
+        <div class="close-clock" onclick="toggleFullscreenClock()">×</div>
+    </div>
+
+    <!-- 背景动画 -->
+    <div class="background-animation" id="backgroundAnimation"></div>
+
+    <!-- 添加表单 -->
+    <div class="overlay" id="overlay"></div>
+    <div class="add-form" id="addForm">
+        <h3 class="form-title" id="formTitle">添加事件</h3>
+        <div class="form-group" id="categoryGroup">
+            <label class="form-label">分类</label>
+            <select class="form-input" id="eventCategory">
+                <option value="food">美食探索</option>
+                <option value="travel">旅行计划</option>
+                <option value="activity">想做的事</option>
+                <option value="shopping">购物清单</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label">图标</label>
+            <div class="icon-selector" id="iconSelector">
+                <!-- 图标选项将通过 JavaScript 动态添加 -->
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">标题</label>
+            <input type="text" class="form-input" id="eventTitle" placeholder="请输入标题">
+        </div>
+        <div class="form-group">
+            <label class="form-label">描述</label>
+            <textarea class="form-input" id="eventDescription" placeholder="添加一些描述..."></textarea>
+        </div>
+        <div class="form-group" id="dateGroup">
+            <label class="form-label">日期</label>
+            <div class="cute-date-picker">
+                <input type="date" class="form-input" id="eventDate">
+            </div>
+        </div>
+        <div class="form-group" id="tagsGroup">
+            <label class="form-label">标签</label>
+            <div class="form-tags" id="formTags">
+                <div class="form-tag" onclick="toggleTag(this)">美食</div>
+                <div class="form-tag" onclick="toggleTag(this)">烘焙</div>
+                <div class="form-tag" onclick="toggleTag(this)">约会</div>
+                <div class="form-tag" onclick="toggleTag(this)">旅行</div>
+                <div class="form-tag" onclick="toggleTag(this)">学习</div>
+                <div class="form-tag" onclick="toggleTag(this)">健康</div>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button class="form-button cancel" onclick="hideAddForm()">取消</button>
+            <button class="form-button submit" onclick="submitEvent()">确定</button>
+        </div>
+    </div>
+
+    <!-- 在 body 标签开始处添加音乐播放器 -->
+    <div class="music-player">
+        <audio id="bgMusic" loop>
+            <source src="default-music.mp3" type="audio/mpeg">
+        </audio>
+        <div class="music-controls">
+            <button class="music-button" id="musicToggle">
+                <span class="music-icon">🎵</span>
+            </button>
+            <div class="music-upload">
+                <input type="file" id="musicUpload" accept="audio/*" style="display: none;">
+                <button class="upload-button" onclick="document.getElementById('musicUpload').click()">
+                    <span class="upload-icon">📁</span>
+                </button>
+            </div>
+            <div class="music-url">
+                <input type="text" id="musicUrl" placeholder="输入音乐URL" class="url-input">
+                <button class="url-button" onclick="playMusicFromUrl()">
+                    <span class="url-icon">🔗</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 温馨话语列表
+        const sweetMessages = [
+            "你是我生命中最美的意外",
+            "愿与你共度余生",
+            "你的笑容是我最大的幸福",
+            "爱你是我做过最好的事",
+            "有你的每一天都是情人节",
+            "你是我最想留住的幸运",
+            "愿时光不老，我们不散",
+            "你是我最想拥抱的人",
+            "有你的地方就是家",
+            "你是我最珍贵的礼物",
+            "愿与你携手到白头",
+            "你是我最想守护的人",
+            "有你的每一天都很甜",
+            "你是我最想分享的人",
+            "愿与你共度每一个日出日落",
+            "你的温柔是我最大的依靠",
+            "有你的世界才完整",
+            "你是我最想珍惜的人",
+            "愿与你共度每一个春夏秋冬",
+            "你是我最想陪伴的人"
+        ];
+
+        // 更新当前时间
+        function updateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const hour = now.getHours().toString().padStart(2, '0');
+            const minute = now.getMinutes().toString().padStart(2, '0');
+            const second = now.getSeconds().toString().padStart(2, '0');
+            
+            const timeString = `${year}年${month}月${day}日 ${hour}:${minute}:${second}`;
+            document.getElementById('currentTime').textContent = timeString;
+            
+            if (document.getElementById('fullscreenClock').classList.contains('active')) {
+                const fullscreenTime = `${hour}:${minute}:${second}`;
+                const fullscreenDate = `${year}年${month}月${day}日`;
+                document.getElementById('fullscreenTime').textContent = fullscreenTime;
+                document.getElementById('fullscreenDate').textContent = fullscreenDate;
+            }
+        }
+
+        // 切换全屏时钟
+        function toggleFullscreenClock() {
+            const clock = document.getElementById('fullscreenClock');
+            clock.classList.toggle('active');
+            updateTime();
+        }
+
+        // 更新温馨话语
+        function updateSweetMessages() {
+            const container = document.getElementById('sweetMessages');
+            const currentMessage = container.querySelector('.sweet-message');
+            
+            if (currentMessage) {
+                currentMessage.style.animation = 'fadeOut 0.8s ease forwards';
+                setTimeout(() => {
+                    currentMessage.remove();
+                    showNewMessage();
+                }, 800);
+            } else {
+                showNewMessage();
+            }
+        }
+
+        function showNewMessage() {
+            const container = document.getElementById('sweetMessages');
+            const message = document.createElement('div');
+            message.className = 'sweet-message';
+            message.textContent = sweetMessages[Math.floor(Math.random() * sweetMessages.length)];
+            container.appendChild(message);
+            
+            // 使用 requestAnimationFrame 确保动画流畅
+            requestAnimationFrame(() => {
+                message.style.animation = 'fadeIn 1.2s ease forwards';
+            });
+        }
+
+        // 创建背景动画
+        function createBackgroundAnimation() {
+            const container = document.getElementById('backgroundAnimation');
+            for (let i = 0; i < 20; i++) {
+                const element = document.createElement('div');
+                element.className = 'floating-element';
+                element.style.left = Math.random() * 100 + '%';
+                element.style.top = Math.random() * 100 + '%';
+                element.style.animationDelay = Math.random() * 15 + 's';
+                element.style.transform = `scale(${Math.random() * 0.5 + 0.5})`;
+                container.appendChild(element);
+            }
+        }
+
+        // 计算时间差
+        function calculateTimeDifference(startDate, endDate) {
+            const diff = Math.abs(endDate - startDate);
+            const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365));
+            const months = Math.floor((diff % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24 * 30));
+            const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24));
+            
+            let result = '';
+            if (years > 0) result += `${years}年`;
+            if (months > 0) result += `${months}个月`;
+            if (days > 0) result += `${days}天`;
+            
+            return result || '今天';
+        }
+
+        // 拖拽状态管理
+        const dragState = {
+            isDragging: false,
+            sourceQuadrant: null,
+            targetQuadrant: null,
+            draggedItem: null
+        };
+
+        function initDragAndDrop() {
+            const quadrants = document.querySelectorAll('.quadrant');
+            
+            quadrants.forEach(quadrant => {
+                const quadrantId = parseInt(quadrant.id.replace('quadrant', ''));
+                
+                // 优化拖拽进入事件
+                quadrant.addEventListener('dragenter', (e) => {
+                    e.preventDefault();
+                    if (dragState.isDragging) {
+                        dragState.targetQuadrant = quadrantId;
+                        quadrant.classList.add('drag-over');
+                        quadrant.style.transform = 'scale(1.02)';
+                        // 添加视觉反馈
+                        quadrant.style.boxShadow = '0 0 20px rgba(52, 152, 219, 0.3)';
+                    }
+                });
+                
+                // 优化拖拽离开事件
+                quadrant.addEventListener('dragleave', (e) => {
+                    e.preventDefault();
+                    if (dragState.isDragging) {
+                        dragState.targetQuadrant = null;
+                        quadrant.classList.remove('drag-over');
+                        quadrant.style.transform = '';
+                        quadrant.style.boxShadow = '';
+                    }
+                });
+                
+                // 优化拖拽悬停事件
+                quadrant.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    if (dragState.isDragging) {
+                        e.dataTransfer.dropEffect = 'move';
+                        quadrant.style.transform = 'scale(1.02)';
+                        quadrant.style.boxShadow = '0 0 20px rgba(52, 152, 219, 0.3)';
+                    }
+                });
+                
+                // 优化放置事件
+                quadrant.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    quadrant.classList.remove('drag-over');
+                    quadrant.style.transform = '';
+                    quadrant.style.boxShadow = '';
+                    
+                    if (dragState.isDragging && dragState.sourceQuadrant !== dragState.targetQuadrant) {
+                        try {
+                            // 获取任务数据
+                            const taskItem = dragState.draggedItem;
+                            const title = taskItem.querySelector('.task-title').textContent;
+                            const description = taskItem.querySelector('.task-description').textContent;
+                            
+                            // 验证数据
+                            if (!title || !description) {
+                                throw new Error('任务数据不完整');
+                            }
+                            
+                            // 确保源象限和目标象限的数据存在
+                            if (!quadrantItems[dragState.sourceQuadrant] || !quadrantItems[dragState.targetQuadrant]) {
+                                throw new Error('象限数据不存在');
+                            }
+                            
+                            // 从源象限移除
+                            const sourceItems = quadrantItems[dragState.sourceQuadrant];
+                            const sourceIndex = sourceItems.findIndex(item => item.title === title);
+                            
+                            if (sourceIndex === -1) {
+                                throw new Error('源任务不存在');
+                            }
+
+                            // 移除源任务
+                            const [movedItem] = sourceItems.splice(sourceIndex, 1);
+                            
+                            // 添加到目标象限
+                            quadrantItems[dragState.targetQuadrant].push({
+                                title: movedItem.title,
+                                description: movedItem.description,
+                                completed: movedItem.completed || false
+                            });
+                            
+                            // 更新两个象限的显示
+                            updateQuadrantList(dragState.sourceQuadrant);
+                            updateQuadrantList(dragState.targetQuadrant);
+                            
+                            // 保存数据
+                            saveData();
+                            
+                            // 添加成功提示
+                            showToast('任务已成功移动到新象限！');
+                        } catch (error) {
+                            console.error('移动任务时出错:', error);
+                            showToast('移动任务失败：' + error.message);
+                            
+                            // 发生错误时重新加载数据
+                            loadData();
+                            for (let i = 1; i <= 4; i++) {
+                                updateQuadrantList(i);
+                            }
+                        }
+                    }
+                    
+                    // 重置拖拽状态
+                    resetDragState();
+                });
+            });
+        }
+
+        // 优化拖拽状态重置函数
+        function resetDragState() {
+            // 移除所有拖拽相关的样式
+            document.querySelectorAll('.quadrant.drag-over').forEach(quadrant => {
+                quadrant.classList.remove('drag-over');
+                quadrant.style.transform = '';
+                quadrant.style.boxShadow = '';
+            });
+            
+            document.querySelectorAll('.task-item.dragging').forEach(item => {
+                item.classList.remove('dragging');
+                item.style.opacity = '';
+                item.style.transform = '';
+            });
+            
+            // 重置状态
+            dragState.isDragging = false;
+            dragState.sourceQuadrant = null;
+            dragState.targetQuadrant = null;
+            dragState.draggedItem = null;
+        }
+
+        // 优化任务项更新函数
+        function updateQuadrantList(quadrant) {
+            const quadrantElement = document.getElementById(`quadrant${quadrant}`);
+            if (!quadrantElement) {
+                console.error(`找不到象限 ${quadrant} 的元素`);
+                return;
+            }
+            
+            const list = quadrantElement.querySelector('.task-list');
+            if (!list) {
+                console.error(`找不到象限 ${quadrant} 的列表元素`);
+                return;
+            }
+            
+            // 确保象限数据存在
+            if (!quadrantItems[quadrant]) {
+                console.error(`象限 ${quadrant} 的数据不存在`);
+                quadrantItems[quadrant] = [];
+            }
+            
+            // 清空列表
+            list.innerHTML = '';
+            
+            // 添加任务项
+            quadrantItems[quadrant].forEach((item, index) => {
+                const taskItem = document.createElement('div');
+                taskItem.className = `task-item ${item.completed ? 'completed' : ''}`;
+                taskItem.draggable = true;
+                taskItem.dataset.quadrant = quadrant;
+                
+                taskItem.innerHTML = `
+                    <div class="task-content">
+                        <div class="task-header">
+                            <div class="task-checkbox ${item.completed ? 'completed' : ''}" onclick="toggleTaskCompletion(${quadrant}, ${index})"></div>
+                            <div class="task-title">${item.title}</div>
+                        </div>
+                        <div class="task-description">${item.description}</div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="task-button edit" onclick="editQuadrantItem(this, ${quadrant})">
+                            <span class="icon edit-icon"></span>
+                        </button>
+                        <button class="task-button delete" onclick="deleteQuadrantItem(this, ${quadrant})">
+                            <span class="icon delete-icon"></span>
+                        </button>
+                    </div>
+                `;
+                
+                // 添加拖拽事件
+                taskItem.addEventListener('dragstart', (e) => {
+                    dragState.isDragging = true;
+                    dragState.sourceQuadrant = parseInt(taskItem.dataset.quadrant);
+                    dragState.draggedItem = taskItem;
+                    taskItem.classList.add('dragging');
+                    e.dataTransfer.effectAllowed = 'move';
+                    // 添加视觉反馈
+                    taskItem.style.opacity = '0.5';
+                    taskItem.style.transform = 'scale(0.95)';
+                    // 设置拖拽数据
+                    e.dataTransfer.setData('text/plain', JSON.stringify({
+                        title: item.title,
+                        description: item.description,
+                        completed: item.completed
+                    }));
+                });
+                
+                taskItem.addEventListener('dragend', () => {
+                    resetDragState();
+                });
+                
+                list.appendChild(taskItem);
+            });
+        }
+
+        // 添加提示框功能
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            // 添加样式
+            toast.style.position = 'fixed';
+            toast.style.bottom = '20px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.backgroundColor = 'rgba(255, 107, 107, 0.9)';
+            toast.style.color = 'white';
+            toast.style.padding = '10px 20px';
+            toast.style.borderRadius = '20px';
+            toast.style.zIndex = '2000';
+            toast.style.animation = 'fadeInOut 2s ease-in-out';
+            
+            // 添加动画样式
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeInOut {
+                    0% { opacity: 0; transform: translate(-50%, 20px); }
+                    15% { opacity: 1; transform: translate(-50%, 0); }
+                    85% { opacity: 1; transform: translate(-50%, 0); }
+                    100% { opacity: 0; transform: translate(-50%, -20px); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // 2秒后移除提示框
+            setTimeout(() => {
+                toast.remove();
+                style.remove();
+            }, 2000);
+        }
+
+        // 全局变量
+        let currentCategory = 'food';
+        const categoryIcons = {
+            food: '🍽️',
+            travel: '✈️',
+            activity: '🎯',
+            shopping: '🛍️'
+        };
+
+        // 全局标签存储
+        let globalTags = {
+            food: ['美食', '烘焙', '约会', '甜点', '饮品'],
+            travel: ['旅行', '蜜月', '度假', '景点', '酒店'],
+            activity: ['学习', '音乐', '阅读', '健康', '运动'],
+            shopping: ['服装', '数码', '家居', '美妆', '配饰']
+        };
+
+        // 初始化数据
+        let wishItems = {
+            food: [
+                { icon: '🍜', title: '尝试新开的日料店', description: '听说他们家的刺身很新鲜', tags: ['美食'] },
+                { icon: '🍰', title: '学习制作提拉米苏', description: '周末可以一起做甜点', tags: ['烘焙'] }
+            ],
+            travel: [
+                { icon: '🏖️', title: '去马尔代夫度蜜月', description: '计划明年夏天', tags: ['蜜月'] }
+            ],
+            activity: [
+                { icon: '🎨', title: '一起学习画画', description: '周末可以参加绘画课程', tags: ['学习'] }
+            ],
+            shopping: [
+                { icon: '👗', title: '买情侣装', description: '想要一套可爱的情侣装', tags: ['服装'] }
+            ]
+        };
+
+        let memoryItems = [];
+        let countdownItems = [];
+        let quadrantItems = {
+            1: [], // 重要且紧急
+            2: [], // 重要不紧急
+            3: [], // 紧急不重要
+            4: []  // 不紧急不重要
+        };
+
+        // 从 localStorage 加载数据
+        function loadData() {
+            try {
+            // 加载愿望清单数据
+            const savedWishItems = localStorage.getItem('wishItems');
+            if (savedWishItems) {
+                wishItems = JSON.parse(savedWishItems);
+            }
+
+            // 加载纪念日数据
+            const savedMemoryItems = localStorage.getItem('memoryItems');
+            if (savedMemoryItems) {
+                memoryItems = JSON.parse(savedMemoryItems);
+            }
+
+            // 加载倒计时数据
+            const savedCountdownItems = localStorage.getItem('countdownItems');
+            if (savedCountdownItems) {
+                countdownItems = JSON.parse(savedCountdownItems);
+            }
+
+            // 加载四象限数据
+            const savedQuadrantItems = localStorage.getItem('quadrantItems');
+            if (savedQuadrantItems) {
+                    const parsedItems = JSON.parse(savedQuadrantItems);
+                    // 确保所有象限都存在
+                    quadrantItems = {
+                        1: Array.isArray(parsedItems[1]) ? parsedItems[1] : [],
+                        2: Array.isArray(parsedItems[2]) ? parsedItems[2] : [],
+                        3: Array.isArray(parsedItems[3]) ? parsedItems[3] : [],
+                        4: Array.isArray(parsedItems[4]) ? parsedItems[4] : []
+                    };
+            }
+
+            // 加载标签数据
+            const savedGlobalTags = localStorage.getItem('globalTags');
+            if (savedGlobalTags) {
+                globalTags = JSON.parse(savedGlobalTags);
+                }
+
+                console.log('加载的数据:', { wishItems, memoryItems, countdownItems, quadrantItems });
+            } catch (error) {
+                console.error('加载数据时出错:', error);
+                resetToDefaultData();
+            }
+        }
+
+        // 保存数据到 localStorage
+        function saveData() {
+            try {
+            localStorage.setItem('wishItems', JSON.stringify(wishItems));
+            localStorage.setItem('memoryItems', JSON.stringify(memoryItems));
+            localStorage.setItem('countdownItems', JSON.stringify(countdownItems));
+            localStorage.setItem('quadrantItems', JSON.stringify(quadrantItems));
+            localStorage.setItem('globalTags', JSON.stringify(globalTags));
+                console.log('保存的数据:', { wishItems, memoryItems, countdownItems, quadrantItems });
+            } catch (error) {
+                console.error('保存数据时出错:', error);
+                showToast('保存数据失败，请检查浏览器存储空间');
+            }
+        }
+
+        function showAddForm(type) {
+            const form = document.getElementById('addForm');
+            const overlay = document.getElementById('overlay');
+            const categoryGroup = document.getElementById('categoryGroup');
+            const dateGroup = document.getElementById('dateGroup');
+            const tagsGroup = document.getElementById('tagsGroup');
+            const iconSelector = document.querySelector('.icon-selector');
+            
+            // 如果是编辑模式，不重置表单数据
+            if (!form.dataset.editMode) {
+                // 重置表单
+                document.getElementById('eventTitle').value = '';
+                document.getElementById('eventDescription').value = '';
+                document.getElementById('eventDate').value = '';
+                document.querySelectorAll('.form-tag').forEach(tag => tag.classList.remove('active'));
+                document.querySelectorAll('.icon-option').forEach(option => option.classList.remove('selected'));
+            }
+            
+            // 根据类型设置表单标题和显示内容
+            switch(type) {
+                case 'wish':
+                    document.getElementById('formTitle').textContent = form.dataset.editMode ? '编辑愿望' : '添加愿望';
+                    document.getElementById('eventCategory').value = currentCategory;
+                    categoryGroup.style.display = 'block';
+                    dateGroup.style.display = 'none';
+                    tagsGroup.style.display = 'block';
+                    iconSelector.parentElement.style.display = 'block';
+                    updateTagList();
+                    initIconSelector();
+                    break;
+                case 'memory':
+                    document.getElementById('formTitle').textContent = '添加纪念日';
+                    categoryGroup.style.display = 'none';
+                    dateGroup.style.display = 'block';
+                    tagsGroup.style.display = 'none';
+                    break;
+                case 'countdown':
+                    document.getElementById('formTitle').textContent = '添加倒计时';
+                    categoryGroup.style.display = 'none';
+                    dateGroup.style.display = 'block';
+                    tagsGroup.style.display = 'none';
+                    break;
+                default:
+                    // 四象限
+                    document.getElementById('formTitle').textContent = `添加任务 - 第${type}象限`;
+                    categoryGroup.style.display = 'none';
+                    dateGroup.style.display = 'none';
+                    tagsGroup.style.display = 'none';
+                    // 存储当前象限编号
+                    form.dataset.quadrant = type;
+            }
+            
+            form.style.display = 'block';
+            overlay.style.display = 'block';
+        }
+
+        function hideAddForm() {
+            const form = document.getElementById('addForm');
+            const overlay = document.getElementById('overlay');
+            
+            if (form) {
+                form.style.display = 'none';
+                // 清空表单
+                document.getElementById('eventTitle').value = '';
+                document.getElementById('eventDescription').value = '';
+                document.getElementById('eventDate').value = '';
+                document.querySelectorAll('.form-tag').forEach(tag => tag.classList.remove('active'));
+                document.querySelectorAll('.icon-option').forEach(option => option.classList.remove('selected'));
+                
+                // 清除编辑模式标记
+                delete form.dataset.editMode;
+                delete form.dataset.itemIndex;
+                delete form.dataset.category;
+                delete form.dataset.selectedIcon;
+                delete form.dataset.quadrant;
+                delete form.dataset.completed;
+            }
+            
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+        }
+
+        // 修改表单提交函数
+        function submitEvent() {
+            const form = document.getElementById('addForm');
+            const formTitle = document.getElementById('formTitle').textContent;
+            const title = document.getElementById('eventTitle').value.trim();
+            const description = document.getElementById('eventDescription').value.trim();
+            
+            // 处理编辑模式
+            if (form.dataset.editMode === 'true') {
+                if (formTitle === '编辑纪念日') {
+                    const index = parseInt(form.dataset.itemIndex);
+                    const date = document.getElementById('eventDate').value;
+                    
+                    if (!date) {
+                        showToast('请选择日期');
+                        return;
+                    }
+
+                    // 更新纪念日
+                    memoryItems[index] = {
+                        title: title,
+                        description: description,
+                        date: date
+                    };
+                    
+                    // 保存数据并更新显示
+                    saveData();
+                    updateMemoryList();
+                    showToast('纪念日修改成功！');
+                    hideAddForm();
+                    return;
+                }
+                
+                if (formTitle === '编辑倒计时') {
+                    const index = parseInt(form.dataset.itemIndex);
+                    const date = document.getElementById('eventDate').value;
+                    
+                    if (!date) {
+                        showToast('请选择日期');
+                        return;
+                    }
+                    
+                    // 更新倒计时
+                    countdownItems[index] = {
+                        title: title,
+                        description: description,
+                        date: date
+                    };
+                    
+                    // 保存数据并更新显示
+                    saveData();
+                    updateCountdownList();
+                    showToast('倒计时修改成功！');
+                    hideAddForm();
+                    return;
+                }
+                
+                if (formTitle === '编辑愿望') {
+                    const category = document.getElementById('eventCategory').value;
+                    const index = parseInt(form.dataset.itemIndex);
+                    const selectedTags = Array.from(document.querySelectorAll('.form-tag.active'))
+                        .map(tag => tag.getAttribute('data-tag'));
+                    const selectedIcon = form.dataset.selectedIcon || wishItems[category][index].icon;
+                    
+                    // 更新愿望项
+                    wishItems[category][index] = {
+                        icon: selectedIcon,
+                        title: title,
+                        description: description,
+                        tags: selectedTags
+                    };
+                    
+                    // 保存数据并更新显示
+                    saveData();
+                    updateWishList();
+                    showToast('愿望修改成功！');
+                    hideAddForm();
+                    return;
+                }
+                
+                if (formTitle === '编辑任务') {
+                    const quadrant = form.dataset.quadrant;
+                    const index = parseInt(form.dataset.itemIndex);
+                    const completed = form.dataset.completed === 'true';
+                    
+                    // 更新任务
+                    quadrantItems[quadrant][index] = {
+                        title: title,
+                        description: description,
+                        completed: completed
+                    };
+                    
+                    // 保存数据并更新显示
+                    saveData();
+                    updateQuadrantList(quadrant);
+                    showToast('任务修改成功！');
+                    hideAddForm();
+                    return;
+                }
+            }
+            
+            // 处理添加模式
+            if (formTitle === '添加愿望') {
+                const category = document.getElementById('eventCategory').value;
+                const selectedTags = Array.from(document.querySelectorAll('.form-tag.active'))
+                    .map(tag => tag.getAttribute('data-tag'));
+                const selectedIcon = form.dataset.selectedIcon || categoryIcons[category];
+                
+                const newItem = {
+                    icon: selectedIcon,
+                    title: title,
+                    description: description,
+                    tags: selectedTags
+                };
+
+                if (!wishItems[category]) {
+                    wishItems[category] = [];
+                }
+                
+                wishItems[category].push(newItem);
+                
+                // 保存数据并更新显示
+                saveData();
+                updateWishList();
+                showToast('愿望添加成功！');
+                hideAddForm();
+                return;
+            } else if (formTitle === '添加纪念日') {
+                const date = document.getElementById('eventDate').value;
+                if (!date) {
+                    showToast('请选择日期');
+                    return;
+                }
+                
+                const newMemory = {
+                    title: title,
+                    description: description,
+                    date: date
+                };
+                
+                memoryItems.push(newMemory);
+                saveData();
+                updateMemoryList();
+                showToast('纪念日添加成功！');
+                hideAddForm();
+                return;
+            } else if (formTitle === '添加倒计时') {
+                const date = document.getElementById('eventDate').value;
+                if (!date) {
+                    showToast('请选择日期');
+                    return;
+                }
+                
+                const newCountdown = {
+                    title: title,
+                    description: description,
+                    date: date
+                };
+                
+                countdownItems.push(newCountdown);
+                saveData();
+                updateCountdownList();
+                showToast('倒计时添加成功！');
+                hideAddForm();
+                return;
+            } else if (formTitle.startsWith('添加任务')) {
+                const quadrant = form.dataset.quadrant;
+                const newTask = {
+                    title: title,
+                    description: description,
+                    completed: false
+                };
+                
+                if (!quadrantItems[quadrant]) {
+                    quadrantItems[quadrant] = [];
+                }
+                
+                quadrantItems[quadrant].push(newTask);
+                saveData();
+                updateQuadrantList(quadrant);
+                showToast('任务添加成功！');
+                hideAddForm();
+                return;
+            }
+        }
+
+        // 更新愿望清单显示
+        function updateWishList() {
+            const list = document.getElementById('wishList');
+            if (!list) return;
+            
+            list.innerHTML = '';
+            const category = document.getElementById('wishCategory').value;
+            const items = wishItems[category] || [];
+            
+            items.forEach((item, index) => {
+                const wishItem = document.createElement('div');
+                wishItem.className = 'wish-item';
+                wishItem.innerHTML = `
+                    <div class="wish-item-content">
+                        <div class="wish-item-icon">${item.icon}</div>
+                        <div class="wish-item-text">
+                            <div class="wish-item-title">${item.title}</div>
+                            <div class="wish-item-description">${item.description}</div>
+                        </div>
+                    </div>
+                    <div class="wish-item-actions">
+                        <button class="event-button edit" onclick="editWishItem(this, '${category}', ${index})">
+                            <span class="icon edit-icon"></span>
+                        </button>
+                        <button class="event-button delete" onclick="deleteWishItem(this, '${category}', ${index})">
+                            <span class="icon delete-icon"></span>
+                        </button>
+                    </div>
+                    <div class="wish-item-tags">
+                        ${(item.tags || []).map(tag => `<div class="wish-item-tag">${tag}</div>`).join('')}
+                    </div>
+                `;
+                list.appendChild(wishItem);
+            });
+        }
+
+        // 更新纪念日列表
+        function updateMemoryList() {
+            const list = document.getElementById('memoryList');
+            if (!list) return;
+            
+            list.innerHTML = '';
+            memoryItems.forEach((item, index) => {
+                const memoryItem = document.createElement('div');
+                memoryItem.className = 'event-item';
+                const eventDate = new Date(item.date);
+                const timeDiff = calculateTimeDifference(eventDate, new Date());
+                
+                memoryItem.innerHTML = `
+                    <div class="event-content">
+                        <div class="event-header">
+                            <div class="event-title">${item.title}</div>
+                            <div class="event-time">${item.date}</div>
+                        </div>
+                        <div class="event-description">
+                            ${item.description}
+                            <div class="time-duration memory">已过去 ${timeDiff}</div>
+                        </div>
+                    </div>
+                    <div class="event-actions">
+                        <button class="event-button edit" onclick="editMemoryItem(this)">
+                            <span class="icon edit-icon"></span>
+                        </button>
+                        <button class="event-button delete" onclick="deleteMemoryItem(this)">
+                            <span class="icon delete-icon"></span>
+                        </button>
+                    </div>
+                `;
+                list.appendChild(memoryItem);
+            });
+        }
+
+        // 更新倒计时列表
+        function updateCountdownList() {
+            const list = document.getElementById('countdownList');
+            if (!list) return;
+            
+            list.innerHTML = '';
+            countdownItems.forEach((item, index) => {
+                const countdownItem = document.createElement('div');
+                countdownItem.className = 'event-item';
+                const eventDate = new Date(item.date);
+                const timeDiff = calculateTimeDifference(new Date(), eventDate);
+                
+                countdownItem.innerHTML = `
+                    <div class="event-content">
+                        <div class="event-header">
+                            <div class="event-title">${item.title}</div>
+                            <div class="event-time">${item.date}</div>
+                        </div>
+                        <div class="event-description">
+                            ${item.description}
+                            <div class="time-duration countdown">还有 ${timeDiff}</div>
+                        </div>
+                    </div>
+                    <div class="event-actions">
+                        <button class="event-button edit" onclick="editCountdownItem(this)">
+                            <span class="icon edit-icon"></span>
+                        </button>
+                        <button class="event-button delete" onclick="deleteCountdownItem(this)">
+                            <span class="icon delete-icon"></span>
+                        </button>
+                    </div>
+                `;
+                list.appendChild(countdownItem);
+            });
+        }
+
+        // 切换愿望清单分类
+        function switchCategory(select) {
+            currentCategory = select.value;
+            updateWishList();
+            updateTagList();
+            // 更新图标选择器
+            initIconSelector();
+        }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            createBackgroundAnimation();
+            updateTime();
+            showNewMessage();
+            
+            // 添加时间容器点击事件
+            const timeContainer = document.getElementById('timeContainer');
+            if (timeContainer) {
+                timeContainer.addEventListener('click', toggleFullscreenClock);
+            }
+            
+            // 初始化数据
+            loadData();
+            
+            // 确保四象限数据存在
+            if (!quadrantItems) {
+                quadrantItems = {
+                    1: [], // 重要且紧急
+                    2: [], // 重要不紧急
+                    3: [], // 紧急不重要
+                    4: []  // 不紧急不重要
+                };
+            }
+            
+            // 更新所有象限的显示
+            for (let i = 1; i <= 4; i++) {
+                updateQuadrantList(i);
+            }
+            
+            // 更新其他模块的显示
+            updateWishList();
+            updateMemoryList();
+            updateCountdownList();
+            
+            initDragAndDrop();
+            
+            // 每秒更新时间
+            setInterval(updateTime, 1000);
+            
+            // 每10秒更新温馨话语
+            setInterval(updateSweetMessages, 10000);
+            
+            // 每分钟更新时间差
+            setInterval(() => {
+                updateMemoryList();
+                updateCountdownList();
+            }, 60000);
+            
+            // 初始化标签列表
+            updateTagList();
+            
+            // 监听分类选择变化
+            document.getElementById('eventCategory').addEventListener('change', function() {
+                updateTagList();
+                initIconSelector(); // 更新图标选择器
+            });
+
+            initMusicPlayer();
+        });
+
+        // 添加编辑和删除功能
+        function editQuadrantItem(button, quadrant) {
+            const taskItem = button.closest('.task-item');
+            const title = taskItem.querySelector('.task-title').textContent;
+            const description = taskItem.querySelector('.task-description').textContent;
+            const completed = taskItem.classList.contains('completed');
+            
+            // 显示编辑表单
+            const form = document.getElementById('addForm');
+            form.dataset.editMode = 'true';
+            form.dataset.quadrant = quadrant;
+            form.dataset.itemIndex = Array.from(taskItem.parentNode.children).indexOf(taskItem);
+            form.dataset.completed = completed;
+            
+            document.getElementById('formTitle').textContent = '编辑任务';
+            document.getElementById('eventTitle').value = title;
+            document.getElementById('eventDescription').value = description;
+            
+            // 隐藏不需要的表单元素
+            document.getElementById('categoryGroup').style.display = 'none';
+            document.getElementById('dateGroup').style.display = 'none';
+            document.getElementById('tagsGroup').style.display = 'none';
+            
+            showAddForm(quadrant);
+        }
+
+        function deleteQuadrantItem(button, quadrant) {
+            if (confirm('确定要删除这个任务吗？')) {
+                const taskItem = button.closest('.task-item');
+                const index = Array.from(taskItem.parentNode.children).indexOf(taskItem);
+                
+                quadrantItems[quadrant].splice(index, 1);
+                updateQuadrantList(quadrant);
+                saveData();
+                showToast('任务已删除');
+            }
+        }
+
+        function editMemoryItem(button) {
+            const eventItem = button.closest('.event-item');
+            const title = eventItem.querySelector('.event-title').textContent;
+            const description = eventItem.querySelector('.event-description').textContent.split('已过去')[0].trim();
+            const date = eventItem.querySelector('.event-time').textContent;
+            
+            // 显示编辑表单
+            const form = document.getElementById('addForm');
+            form.dataset.editMode = 'true';
+            form.dataset.itemIndex = Array.from(eventItem.parentNode.children).indexOf(eventItem);
+            
+            // 设置表单内容
+            document.getElementById('formTitle').textContent = '编辑纪念日';
+            document.getElementById('eventTitle').value = title;
+            document.getElementById('eventDescription').value = description;
+            document.getElementById('eventDate').value = date;
+            
+            // 显示需要的表单元素
+            document.getElementById('categoryGroup').style.display = 'none';
+            document.getElementById('dateGroup').style.display = 'block';
+            document.getElementById('tagsGroup').style.display = 'none';
+            
+            // 显示表单
+            form.style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function deleteMemoryItem(button) {
+            if (confirm('确定要删除这个纪念日吗？')) {
+                const eventItem = button.closest('.event-item');
+                const index = Array.from(eventItem.parentNode.children).indexOf(eventItem);
+                
+                memoryItems.splice(index, 1);
+                updateMemoryList();
+                saveData();
+                showToast('纪念日已删除');
+            }
+        }
+
+        function editCountdownItem(button) {
+            const eventItem = button.closest('.event-item');
+            const title = eventItem.querySelector('.event-title').textContent;
+            const description = eventItem.querySelector('.event-description').textContent.split('还有')[0].trim();
+            const date = eventItem.querySelector('.event-time').textContent;
+            
+            // 显示编辑表单
+            const form = document.getElementById('addForm');
+            form.dataset.editMode = 'true';
+            form.dataset.itemIndex = Array.from(eventItem.parentNode.children).indexOf(eventItem);
+            
+            // 设置表单内容
+            document.getElementById('formTitle').textContent = '编辑倒计时';
+            document.getElementById('eventTitle').value = title;
+            document.getElementById('eventDescription').value = description;
+            document.getElementById('eventDate').value = date;
+            
+            // 显示需要的表单元素
+            document.getElementById('categoryGroup').style.display = 'none';
+            document.getElementById('dateGroup').style.display = 'block';
+            document.getElementById('tagsGroup').style.display = 'none';
+            
+            // 显示表单
+            form.style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function deleteCountdownItem(button) {
+            if (confirm('确定要删除这个倒计时吗？')) {
+                const eventItem = button.closest('.event-item');
+                const index = Array.from(eventItem.parentNode.children).indexOf(eventItem);
+                
+                countdownItems.splice(index, 1);
+                updateCountdownList();
+                saveData();
+                showToast('倒计时已删除');
+            }
+        }
+
+        function editWishItem(button, category, index) {
+            const item = wishItems[category][index];
+            
+            // 显示编辑表单
+            const form = document.getElementById('addForm');
+            form.dataset.editMode = 'true';
+            form.dataset.category = category;
+            form.dataset.itemIndex = index;
+            
+            document.getElementById('formTitle').textContent = '编辑愿望';
+            document.getElementById('eventTitle').value = item.title;
+            document.getElementById('eventDescription').value = item.description;
+            document.getElementById('eventCategory').value = category;
+            
+            // 显示需要的表单元素
+            document.getElementById('categoryGroup').style.display = 'block';
+            document.getElementById('dateGroup').style.display = 'none';
+            document.getElementById('tagsGroup').style.display = 'block';
+            
+            // 更新标签列表
+            updateTagList();
+            
+            // 设置标签选中状态
+            document.querySelectorAll('.form-tag').forEach(tag => {
+                const tagValue = tag.getAttribute('data-tag');
+                if (item.tags && item.tags.includes(tagValue)) {
+                    tag.classList.add('active');
+                }
+            });
+            
+            // 初始化图标选择器并选中当前图标
+            initIconSelector();
+            selectIcon(item.icon);
+            
+            // 显示表单
+            form.style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        // 修改删除愿望项函数
+        function deleteWishItem(button, category, index) {
+            // 创建遮罩层
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            document.body.appendChild(overlay);
+
+            // 创建删除确认弹窗
+            const popup = document.createElement('div');
+            popup.className = 'delete-confirm-popup';
+            popup.innerHTML = `
+                <div class="popup-title">确认删除</div>
+                <div class="popup-message">确定要删除这个愿望吗？删除后将无法恢复。</div>
+                <div class="popup-buttons">
+                    <button class="popup-button cancel-button" onclick="closeDeletePopup()">取消</button>
+                    <button class="popup-button confirm-button" onclick="confirmDeleteWishItem('${category}', ${index})">确认删除</button>
+                </div>
+            `;
+            document.body.appendChild(popup);
+        }
+
+        // 添加关闭删除弹窗函数
+        function closeDeletePopup() {
+            const popup = document.querySelector('.delete-confirm-popup');
+            const overlay = document.querySelector('.overlay');
+            if (popup) popup.remove();
+            if (overlay) overlay.remove();
+        }
+
+        // 添加确认删除函数
+        function confirmDeleteWishItem(category, index) {
+            if (wishItems[category] && wishItems[category][index]) {
+                wishItems[category].splice(index, 1);
+                updateWishList();
+                saveData();
+                showToast('愿望已删除');
+            }
+            closeDeletePopup();
+        }
+
+        // 添加任务完成状态切换函数
+        function toggleTaskCompletion(quadrant, index) {
+            try {
+                const taskItem = document.querySelector(`#quadrant${quadrant} .task-list`).children[index];
+                const checkbox = taskItem.querySelector('.task-checkbox');
+                
+                // 立即更新视觉反馈
+                checkbox.classList.toggle('completed');
+                taskItem.classList.toggle('completed');
+                
+                // 更新数据状态
+                quadrantItems[quadrant][index].completed = !quadrantItems[quadrant][index].completed;
+                
+                if (quadrantItems[quadrant][index].completed) {
+                    // 计算移动距离
+                    const remainingTasks = Array.from(taskItem.parentNode.children).slice(index + 1);
+                    const moveDistance = remainingTasks.reduce((total, task) => {
+                        return total + (task.offsetHeight + 8); // 8px是margin-bottom
+                    }, 0);
+                    
+                    // 设置移动动画
+                    taskItem.style.setProperty('--move-distance', `${moveDistance}px`);
+                    taskItem.classList.add('moving');
+                    
+                    // 使用 requestAnimationFrame 优化动画性能
+                    requestAnimationFrame(() => {
+                        // 重新排序任务
+                        const completedTasks = quadrantItems[quadrant].filter(task => task.completed);
+                        const uncompletedTasks = quadrantItems[quadrant].filter(task => !task.completed);
+                        quadrantItems[quadrant] = [...uncompletedTasks, ...completedTasks];
+                        
+                        // 动画结束后更新列表
+                        setTimeout(() => {
+                updateQuadrantList(quadrant);
+                saveData();
+                            showToast('任务已完成并移至底部');
+                        }, 800);
+                    });
+                } else {
+                    // 未完成状态，立即更新
+                    requestAnimationFrame(() => {
+                        const completedTasks = quadrantItems[quadrant].filter(task => task.completed);
+                        const uncompletedTasks = quadrantItems[quadrant].filter(task => !task.completed);
+                        quadrantItems[quadrant] = [...uncompletedTasks, ...completedTasks];
+                        updateQuadrantList(quadrant);
+                        saveData();
+                        showToast('任务已标记为未完成');
+                    });
+                }
+            } catch (error) {
+                console.error('更新任务状态时出错:', error);
+                showToast('更新任务状态失败');
+            }
+        }
+
+        // 添加标签管理相关函数
+        function toggleTag(tagElement) {
+            if (tagElement.classList.contains('editing')) return;
+            tagElement.classList.toggle('active');
+        }
+
+        function updateTagList() {
+            const category = document.getElementById('eventCategory').value;
+            const tagsContainer = document.getElementById('formTags');
+            
+            // 清空现有标签
+            tagsContainer.innerHTML = '';
+            
+            // 添加现有标签
+            globalTags[category].forEach(tag => {
+                const tagElement = document.createElement('div');
+                tagElement.className = 'form-tag';
+                tagElement.setAttribute('data-tag', tag);
+                tagElement.textContent = tag;
+                tagElement.onclick = function() {
+                    toggleTag(this);
+                };
+                tagsContainer.appendChild(tagElement);
+            });
+            
+            // 添加输入框
+            const addTagInput = document.createElement('input');
+            addTagInput.type = 'text';
+            addTagInput.className = 'add-tag-input';
+            addTagInput.placeholder = '添加标签...';
+            addTagInput.onkeydown = function(e) {
+                if (e.key === 'Enter') {
+                    const value = this.value.trim();
+                    if (value && !globalTags[category].includes(value)) {
+                        globalTags[category].push(value);
+                        saveData();
+                        updateTagList();
+                    }
+                    this.value = '';
+                }
+            };
+            tagsContainer.appendChild(addTagInput);
+        }
+
+        function removeTag(removeButton) {
+            const tagElement = removeButton.parentElement;
+            const tag = tagElement.getAttribute('data-tag');
+            const category = document.getElementById('eventCategory').value;
+            
+            // 从全局标签列表中移除
+            const index = globalTags[category].indexOf(tag);
+            if (index !== -1) {
+                globalTags[category].splice(index, 1);
+                saveData(); // 保存删除后的标签列表
+            }
+            
+            tagElement.remove();
+        }
+
+        // 修改图标列表和图标选择相关函数
+        const iconList = {
+            food: [
+                '🍽️', '🍜', '🍲', '🍱', '🍛', '🍝', '🍕', '🍔', '🍟', '🌭', '🍿', '🍩', '🍪', '🍫', '🍬', '🍭', '🍮', '🍯',
+                '🍖', '🍗', '🥩', '🥓', '🍳', '🥚', '🥞', '🧇', '🥓', '🥨', '🥖', '🧀', '🥪', '🥙', '🥗', '🥘', '🥫', '🍝',
+                '🍜', '🍲', '🍛', '🍣', '🍱', '🥟', '🍤', '🍙', '🍚', '🍘', '🍥', '🥠', '🍡', '🍧', '🍨', '🍦', '🥧', '🧁'
+            ],
+            travel: [
+                '✈️', '🚀', '🚁', '🚂', '🚢', '🚤', '🏖️', '🏝️', '🏜️', '🏕️', '🏞️', '🌅', '🌄', '🌇', '🌆', '🏙️', '🌃', '🌌',
+                '🗽', '🗼', '🗻', '🏰', '🏯', '🏟️', '🎡', '🎢', '🎠', '⛲', '⛱️', '🏖️', '🏝️', '🏔️', '⛰️', '🌋', '🗻', '🏕️',
+                '🏕️', '⛺', '🏔️', '🗻', '🌋', '🏖️', '🏝️', '🏜️', '🏕️', '🏞️', '🌅', '🌄', '🌇', '🌆', '🏙️', '🌃', '🌌', '🌠'
+            ],
+            activity: [
+                '🎯', '🎨', '🎭', '🎪', '🎢', '🎡', '🎠', '🎬', '🎤', '🎧', '🎼', '🎹', '🎸', '🎻', '🎺', '🎷', '🎲', '🎮',
+                '🏃', '🏃‍♀️', '🏃‍♂️', '🚶', '🚶‍♀️', '🚶‍♂️', '🏋️', '🏋️‍♀️', '🏋️‍♂️', '🤸', '🤸‍♀️', '🤸‍♂️', '⛹️', '⛹️‍♀️', '⛹️‍♂️', '🤾', '🤾‍♀️', '🤾‍♂️',
+                '🧘', '🧘‍♀️', '🧘‍♂️', '🏄', '🏄‍♀️', '🏄‍♂️', '🏊', '🏊‍♀️', '🏊‍♂️', '🤽', '🤽‍♀️', '🤽‍♂️', '🚣', '🚣‍♀️', '🚣‍♂️', '🏇', '🏇‍♀️', '🏇‍♂️'
+            ],
+            shopping: [
+                '🛍️', '👗', '👔', '👕', '👖', '👚', '👛', '👜', '💼', '👝', '🎒', '👟', '👠', '👡', '👢', '👞', '👑', '💍',
+                '🛒', '🛍️', '👗', '👔', '👕', '👖', '👚', '👛', '👜', '💼', '👝', '🎒', '👟', '👠', '👡', '👢', '👞', '👑', '💍',
+                '💄', '💋', '👄', '👅', '👂', '👃', '👣', '👁️', '👀', '🧠', '🦷', '🦴', '💪', '🦵', '🦶', '👋', '🤚', '🖐️'
+            ]
+        };
+
+        function initIconSelector() {
+            const iconSelector = document.getElementById('iconSelector');
+            const category = document.getElementById('eventCategory').value;
+            iconSelector.innerHTML = '';
+            
+            // 获取当前分类的图标列表
+            const currentIcons = iconList[category] || iconList.food;
+            
+            currentIcons.forEach(icon => {
+                const iconOption = document.createElement('div');
+                iconOption.className = 'icon-option';
+                iconOption.textContent = icon;
+                iconOption.onclick = () => selectIcon(icon);
+                iconSelector.appendChild(iconOption);
+            });
+        }
+
+        function selectIcon(icon) {
+            const iconOptions = document.querySelectorAll('.icon-option');
+            iconOptions.forEach(option => {
+                option.classList.remove('selected');
+                if (option.textContent === icon) {
+                    option.classList.add('selected');
+                }
+            });
+            
+            // 存储选中的图标
+            document.getElementById('addForm').dataset.selectedIcon = icon;
+        }
+
+        // 修改事件绑定
+        document.addEventListener('DOMContentLoaded', function() {
+            // 绑定表单提交事件
+            const form = document.getElementById('addForm');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    submitEvent();
+                });
+            }
+            
+            // 绑定确定按钮点击事件
+            const submitButton = document.querySelector('.form-button.submit');
+            if (submitButton) {
+                submitButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    submitEvent();
+                });
+            }
+            
+            // 绑定取消按钮点击事件
+            const cancelButton = document.querySelector('.form-button.cancel');
+            if (cancelButton) {
+                cancelButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    hideAddForm();
+                });
+            }
+            
+            // 绑定遮罩层点击事件
+            const overlay = document.getElementById('overlay');
+            if (overlay) {
+                overlay.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    hideAddForm();
+                });
+            }
+        });
+
+        // 添加清除表单数据的辅助函数
+        function clearFormData() {
+            const form = document.getElementById('addForm');
+            document.getElementById('eventTitle').value = '';
+            document.getElementById('eventDescription').value = '';
+            document.getElementById('eventDate').value = '';
+            document.querySelectorAll('.form-tag').forEach(tag => tag.classList.remove('active'));
+            document.querySelectorAll('.icon-option').forEach(option => option.classList.remove('selected'));
+            
+            // 清除编辑模式标记
+            delete form.dataset.editMode;
+            delete form.dataset.itemIndex;
+            delete form.dataset.category;
+            delete form.dataset.selectedIcon;
+            delete form.dataset.quadrant;
+            delete form.dataset.completed;
+        }
+
+        // 音乐控制相关函数
+        function initMusicPlayer() {
+            const bgMusic = document.getElementById('bgMusic');
+            const musicToggle = document.getElementById('musicToggle');
+            const musicUpload = document.getElementById('musicUpload');
+            const urlInput = document.getElementById('musicUrl');
+
+            // 自动播放音乐
+            bgMusic.play().catch(error => {
+                console.log('自动播放被阻止:', error);
+                showToast('点击音乐按钮开始播放');
+            });
+
+            // 音乐播放/暂停切换
+            musicToggle.addEventListener('click', () => {
+                if (bgMusic.paused) {
+                    bgMusic.play();
+                    musicToggle.classList.add('playing');
+                } else {
+                    bgMusic.pause();
+                    musicToggle.classList.remove('playing');
+                }
+            });
+
+            // 音乐上传处理
+            musicUpload.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const url = URL.createObjectURL(file);
+                    bgMusic.src = url;
+                    bgMusic.play();
+                    musicToggle.classList.add('playing');
+                    showToast('音乐已更新');
+                }
+            });
+
+            // URL输入框回车事件
+            urlInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    playMusicFromUrl();
+                }
+            });
+
+            // 监听音乐播放状态
+            bgMusic.addEventListener('play', () => {
+                musicToggle.classList.add('playing');
+            });
+
+            bgMusic.addEventListener('pause', () => {
+                musicToggle.classList.remove('playing');
+            });
+
+            // 监听音乐错误
+            bgMusic.addEventListener('error', (e) => {
+                console.error('音乐播放错误:', e);
+                showToast('音乐播放出错，请检查URL或文件');
+                musicToggle.classList.remove('playing');
+            });
+        }
+
+        // 添加从URL播放音乐的函数
+        function playMusicFromUrl() {
+            const urlInput = document.getElementById('musicUrl');
+            const url = urlInput.value.trim();
+            const bgMusic = document.getElementById('bgMusic');
+            const musicToggle = document.getElementById('musicToggle');
+
+            if (!url) {
+                showToast('请输入音乐URL');
+                return;
+            }
+
+            // 验证URL格式
+            try {
+                new URL(url);
+            } catch (e) {
+                showToast('请输入有效的URL');
+                return;
+            }
+
+            // 更新音乐源并播放
+            bgMusic.src = url;
+            bgMusic.load(); // 重新加载音频
+
+            bgMusic.play().then(() => {
+                musicToggle.classList.add('playing');
+                showToast('音乐开始播放');
+            }).catch(error => {
+                console.error('播放音乐失败:', error);
+                showToast('无法播放该音乐，请检查URL是否有效');
+            });
+        }
+    </script>
+</body>
+</html> 
